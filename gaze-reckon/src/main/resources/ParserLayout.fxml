@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8"
+            fx:controller="views.ParserView">
+    <GridPane layoutX="14.0" layoutY="14.0" prefHeight="80.0" prefWidth="472.0" AnchorPane.rightAnchor="14.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="258.0" minWidth="10.0" prefWidth="64.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="344.0" minWidth="10.0" prefWidth="293.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="114.0" minWidth="10.0" prefWidth="94.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <Label text="Tracker"/>
+        <TextField fx:id="trackerFileAddress" editable="false" prefHeight="25.0" prefWidth="298.0"
+                   GridPane.columnIndex="1"/>
+        <Button fx:id="clearTrackerFile" disable="true" mnemonicParsing="false" onAction="#handleClearTrackerFileBtn"
+                text="X" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets left="270.0"/>
+            </GridPane.margin>
+        </Button>
+        <Button fx:id="chTestFile" mnemonicParsing="false" onAction="#handleChTrackerFileBtn" text="Choose file"
+                GridPane.columnIndex="2">
+            <GridPane.margin>
+                <Insets left="8.0"/>
+            </GridPane.margin>
+        </Button>
+        <Label contentDisplay="RIGHT" text="Test" GridPane.rowIndex="1"/>
+        <TextField fx:id="testFileAddress" editable="false" promptText="Is not neccessary" GridPane.columnIndex="1"
+                   GridPane.rowIndex="1"/>
+        <Button fx:id="clearTestFile" disable="true" mnemonicParsing="false" onAction="#handleClearTestFileBtn"
+                text="X" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets left="270.0"/>
+            </GridPane.margin>
+        </Button>
+        <Button fx:id="chTrackerFile" mnemonicParsing="false" onAction="#handleChTestFileBtn" text="Choose file"
+                GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets left="8.0"/>
+            </GridPane.margin>
+        </Button>
+    </GridPane>
+    <GridPane layoutX="14.0" layoutY="94.0" prefHeight="300.0" prefWidth="472.0" style="-fx-border-color: lightgrey;"
+              AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="94.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="126.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.0" minWidth="10.0" prefWidth="116.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="167.0" minWidth="10.0" prefWidth="123.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.0" minWidth="10.0" prefWidth="101.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <opaqueInsets>
+            <Insets/>
+        </opaqueInsets>
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </padding>
+
+        <Label text="General">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <Label text="Average" GridPane.columnIndex="1">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <Label text="Left eye" GridPane.columnIndex="2">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <Label text="Right eye" GridPane.columnIndex="3">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <CheckBox fx:id="number" mnemonicParsing="false" onAction="#handleCheckBox" text="№" GridPane.rowIndex="1"/>
+        <CheckBox fx:id="timeStamp" mnemonicParsing="false" onAction="#handleCheckBox" text="Timestamp"
+                  GridPane.rowIndex="2"/>
+        <CheckBox fx:id="stimulusPosition" disable="true" mnemonicParsing="false" onAction="#handleCheckBox"
+                  text="Stimulus position" GridPane.rowIndex="3"/>
+        <CheckBox fx:id="fix" mnemonicParsing="false" onAction="#handleCheckBox" text="Fix" GridPane.rowIndex="4"/>
+        <CheckBox fx:id="time" mnemonicParsing="false" onAction="#handleCheckBox" text="Time" GridPane.rowIndex="5"/>
+        <CheckBox fx:id="category" mnemonicParsing="false" onAction="#handleCheckBox" text="Category"
+                  GridPane.rowIndex="6"/>
+        <CheckBox fx:id="request" mnemonicParsing="false" onAction="#handleCheckBox" text="Request"
+                  GridPane.rowIndex="7"/>
+        <CheckBox fx:id="state" mnemonicParsing="false" onAction="#handleCheckBox" text="State"
+                  GridPane.rowIndex="8"/>
+        <CheckBox fx:id="statuscode" mnemonicParsing="false" onAction="#handleCheckBox" text="Statuscode"
+                  GridPane.rowIndex="9"/>
+        <CheckBox fx:id="avg" mnemonicParsing="false" onAction="#handleCheckBox" text="Average"
+                  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <CheckBox fx:id="raw" mnemonicParsing="false" onAction="#handleCheckBox" text="Raw" GridPane.columnIndex="1"
+                  GridPane.rowIndex="2"/>
+        <CheckBox fx:id="dAvg" disable="true" mnemonicParsing="false" onAction="#handleCheckBox" text="delta average"
+                  GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <CheckBox fx:id="dRaw" disable="true" mnemonicParsing="false" onAction="#handleCheckBox" text="delta raw"
+                  GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        <CheckBox fx:id="lEyeAvg" mnemonicParsing="false" onAction="#handleCheckBox" text="Average"
+                  GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <CheckBox fx:id="lEyeRaw" mnemonicParsing="false" onAction="#handleCheckBox" text="Raw"
+                  GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+        <CheckBox fx:id="lEyeDAvg" disable="true" mnemonicParsing="false" onAction="#handleCheckBox"
+                  text="delta average" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+        <CheckBox fx:id="lEyeDRaw" disable="true" mnemonicParsing="false" onAction="#handleCheckBox" text="delta raw"
+                  GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+        <CheckBox fx:id="lEyePCenter" mnemonicParsing="false" onAction="#handleCheckBox" text="pCenter"
+                  GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+        <CheckBox fx:id="lEyePSize" mnemonicParsing="false" onAction="#handleCheckBox" text="pSize"
+                  GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+        <CheckBox fx:id="rEyeAvg" mnemonicParsing="false" onAction="#handleCheckBox" text="Average"
+                  GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+        <CheckBox fx:id="rEyeRaw" mnemonicParsing="false" onAction="#handleCheckBox" text="Raw"
+                  GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+        <CheckBox fx:id="rEyeDAvg" disable="true" mnemonicParsing="false" onAction="#handleCheckBox"
+                  text="delta average" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+        <CheckBox fx:id="rEyeDRaw" disable="true" mnemonicParsing="false" onAction="#handleCheckBox" text="delta raw"
+                  GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+        <CheckBox fx:id="rEyePCenter" mnemonicParsing="false" onAction="#handleCheckBox" text="pCenter"
+                  GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+        <CheckBox fx:id="rEyePSize" mnemonicParsing="false" onAction="#handleCheckBox" text="pSize"
+                  GridPane.columnIndex="3" GridPane.rowIndex="6"/>
+    </GridPane>
+    <HBox layoutX="44.0" layoutY="416.0" spacing="15.0">
+        <Label layoutX="22.0" layoutY="464.0" prefHeight="25.0" prefWidth="90.0" text="Output file name"/>
+        <TextField fx:id="outputFileName" layoutX="128.0" layoutY="460.0" prefHeight="25.0" prefWidth="308.0"/>
+    </HBox>
+    <Button fx:id="start" layoutX="100.0" layoutY="455.0" mnemonicParsing="false" onAction="#handleStartBtn"
+            prefHeight="25.0" prefWidth="90.0" text="Start"/>
+    <Button fx:id="exit" layoutX="289.0" layoutY="455.0" mnemonicParsing="false" onAction="#handleExtBtn"
+            prefHeight="25.0" prefWidth="90.0" text="Exit"/>
+</AnchorPane>

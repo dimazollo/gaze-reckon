@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.RootLayoutView">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleWriteData" text="Write data"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Preferences">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Data adjustments">
+                            <items>
+                                <CheckMenuItem fx:id="linearInterpolationFlag" mnemonicParsing="false"
+                                               text="Linear interpolation"/>
+                                <CheckMenuItem fx:id="listwiseDeletionFlag" mnemonicParsing="false"
+                                               text="Listwise deletion"/>
+                                <CheckMenuItem fx:id="simpleRecoveryFlag" mnemonicParsing="false"
+                                               text="Simple recovery"/>
+                                <SeparatorMenuItem mnemonicParsing="false"/>
+                                <CheckMenuItem fx:id="smoothingFilterFlag" disable="true" mnemonicParsing="false"
+                                               text="Smoothing filter"/>
+                            </items>
+                        </Menu>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <Menu mnemonicParsing="false" text="Field separator">
+                            <items>
+                                <RadioMenuItem fx:id="commaFlag" mnemonicParsing="false" selected="true"
+                                               text="Comma (Default)">
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="fieldSeparatorToggleGroup"/>
+                                    </toggleGroup>
+                                </RadioMenuItem>
+                                <RadioMenuItem fx:id="semicolonFlag" mnemonicParsing="false" text="Semicolon (RU)"
+                                               toggleGroup="$fieldSeparatorToggleGroup"/>
+                            </items>
+                        </Menu>
+                        <CheckMenuItem fx:id="useConfigFlag" mnemonicParsing="false" text="Use configuration file"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+</BorderPane>
