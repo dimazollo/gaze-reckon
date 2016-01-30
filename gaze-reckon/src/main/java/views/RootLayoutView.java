@@ -104,8 +104,8 @@ public class RootLayoutView {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
         System.out.println();
-        alert.setHeaderText("Eye-tracker data analyzer");
-        alert.setContentText("Application for processing streams of data\n" +
+        alert.setHeaderText("Gaze Reckon");
+        alert.setContentText("Application for processing data files\n" +
                 "received from \"The Eye Tribe\" eye-tracker.\n\n" +
                 "Dmitry Volovod, Mikhail Turicyn\n" +
                 "INPE NRNU MEPHI, 2015");

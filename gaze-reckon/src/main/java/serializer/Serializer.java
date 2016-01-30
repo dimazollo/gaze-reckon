@@ -33,67 +33,6 @@ public class Serializer {
         rootLayoutView = mainApp.getRootLayoutView();
     }
 
-    public void store() {
-        if (rootLayoutView.getUseConfigFlag()) {
-            //parser elements states
-            //text fields
-            properties.put("TrackerFileAddress", parserView.getTrackerFileAddress());
-            properties.put("TestFileAddress", parserView.getTestFileAddress());
-            properties.put("OutputFileName", parserView.getOutputFileName());
-            //check boxes
-            properties.put("Number", parserView.getNumber() ? "True" : "False");
-            properties.put("Time", parserView.getTime() ? "True" : "False");
-            properties.put("StimulusPosition", parserView.getStimulusPosition() ? "True" : "False");
-            properties.put("Fix", parserView.getFix() ? "True" : "False");
-            properties.put("Avg", parserView.getAvg() ? "True" : "False");
-            properties.put("Raw", parserView.getRaw() ? "True" : "False");
-            properties.put("dAvg", parserView.getdAvg() ? "True" : "False");
-            properties.put("dRaw", parserView.getdRaw() ? "True" : "False");
-            properties.put("lEyeAvg", parserView.getlEyeAvg() ? "True" : "False");
-            properties.put("lEyeRaw", parserView.getlEyeRaw() ? "True" : "False");
-            properties.put("lEyeDAvg", parserView.getlEyeDAvg() ? "True" : "False");
-            properties.put("lEyeDRaw", parserView.getlEyeDRaw() ? "True" : "False");
-            properties.put("lEyePCenter", parserView.getlEyePCenter() ? "True" : "False");
-            properties.put("lEyePSize", parserView.getlEyePSize() ? "True" : "False");
-            properties.put("rEyeAvg", parserView.getrEyeAvg() ? "True" : "False");
-            properties.put("rEyeRaw", parserView.getrEyeRaw() ? "True" : "False");
-            properties.put("rEyeDAvg", parserView.getrEyeDAvg() ? "True" : "False");
-            properties.put("rEyeDRaw", parserView.getrEyeDRaw() ? "True" : "False");
-            properties.put("rEyePCenter", parserView.getrEyePCenter() ? "True" : "False");
-            properties.put("rEyePSize", parserView.getrEyePSize() ? "True" : "False");
-            properties.put("TimeStamp", parserView.getTimeStamp() ? "True" : "False");
-            properties.put("Category", parserView.getCategory() ? "True" : "False");
-            properties.put("Request", parserView.getRequest() ? "True" : "False");
-            properties.put("State", parserView.getState() ? "True" : "False");
-            properties.put("Statuscode", parserView.getStatuscode() ? "True" : "False");
-            //fd elements states
-            properties.put("IDT", fdView.getIdt().isSelected() ? "True" : "False");
-            properties.put("IDT_latency", fdView.getIdtLatency());
-            properties.put("IDT_threshold", fdView.getIdtThreshold());
-            properties.put("Hyperbola", fdView.getHyperbola().isSelected() ? "True" : "False");
-            properties.put("Logarithm", fdView.getLogarithm().isSelected() ? "True" : "False");
-            //RootLayout (Menu) elements states
-            properties.put("LinearSmoothingFilter", rootLayoutView.getLinearInterpolationFlag() ? "True" : "False");
-            properties.put("ListwiseDeletion", rootLayoutView.getListwiseDeletionFlag() ? "True" : "False");
-            properties.put("SimpleRecovery", rootLayoutView.getSimpleRecoveryFlag() ? "True" : "False");
-            properties.put("CommaSeparator", rootLayoutView.getCommaFlag() ? "True" : "False");
-            properties.put("SemicolonSeparator", rootLayoutView.getSemicolonFlag() ? "True" : "False");
-            //saving to file
-            try {
-                File file = new File(PROPERTIES_STORE);
-                if (!file.exists()) file.createNewFile();
-                FileOutputStream out = new FileOutputStream(file);
-                properties.storeToXML(out, "Let's write some comments!");
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            File file = new File(PROPERTIES_STORE);
-            if (file.exists()) file.delete();
-        }
-    }
-
     public boolean load() {
         File file = new File(PROPERTIES_STORE);
         if (file.exists()) {
@@ -156,6 +95,73 @@ public class Serializer {
             }
         } else {
             return false;
+        }
+    }
+
+    public void store() {
+        if (rootLayoutView.getUseConfigFlag()) {
+            //parser elements states
+            //text fields
+            properties.put("TrackerFileAddress", parserView.getTrackerFileAddress());
+            properties.put("TestFileAddress", parserView.getTestFileAddress());
+            properties.put("OutputFileName", parserView.getOutputFileName());
+            //check boxes
+            properties.put("Number", parserView.getNumber() ? "True" : "False");
+            properties.put("Time", parserView.getTime() ? "True" : "False");
+            properties.put("StimulusPosition", parserView.getStimulusPosition() ? "True" : "False");
+            properties.put("Fix", parserView.getFix() ? "True" : "False");
+            properties.put("Avg", parserView.getAvg() ? "True" : "False");
+            properties.put("Raw", parserView.getRaw() ? "True" : "False");
+            properties.put("dAvg", parserView.getdAvg() ? "True" : "False");
+            properties.put("dRaw", parserView.getdRaw() ? "True" : "False");
+            properties.put("lEyeAvg", parserView.getlEyeAvg() ? "True" : "False");
+            properties.put("lEyeRaw", parserView.getlEyeRaw() ? "True" : "False");
+            properties.put("lEyeDAvg", parserView.getlEyeDAvg() ? "True" : "False");
+            properties.put("lEyeDRaw", parserView.getlEyeDRaw() ? "True" : "False");
+            properties.put("lEyePCenter", parserView.getlEyePCenter() ? "True" : "False");
+            properties.put("lEyePSize", parserView.getlEyePSize() ? "True" : "False");
+            properties.put("rEyeAvg", parserView.getrEyeAvg() ? "True" : "False");
+            properties.put("rEyeRaw", parserView.getrEyeRaw() ? "True" : "False");
+            properties.put("rEyeDAvg", parserView.getrEyeDAvg() ? "True" : "False");
+            properties.put("rEyeDRaw", parserView.getrEyeDRaw() ? "True" : "False");
+            properties.put("rEyePCenter", parserView.getrEyePCenter() ? "True" : "False");
+            properties.put("rEyePSize", parserView.getrEyePSize() ? "True" : "False");
+            properties.put("TimeStamp", parserView.getTimeStamp() ? "True" : "False");
+            properties.put("Category", parserView.getCategory() ? "True" : "False");
+            properties.put("Request", parserView.getRequest() ? "True" : "False");
+            properties.put("State", parserView.getState() ? "True" : "False");
+            properties.put("Statuscode", parserView.getStatuscode() ? "True" : "False");
+            //fd elements states
+            properties.put("IDT", fdView.getIdt().isSelected() ? "True" : "False");
+            properties.put("IDT_latency", fdView.getIdtLatency());
+            properties.put("IDT_threshold", fdView.getIdtThreshold());
+            properties.put("Hyperbola", fdView.getHyperbola().isSelected() ? "True" : "False");
+            properties.put("Logarithm", fdView.getLogarithm().isSelected() ? "True" : "False");
+            //RootLayout (Menu) elements states
+            properties.put("LinearSmoothingFilter", rootLayoutView.getLinearInterpolationFlag() ? "True" : "False");
+            properties.put("ListwiseDeletion", rootLayoutView.getListwiseDeletionFlag() ? "True" : "False");
+            properties.put("SimpleRecovery", rootLayoutView.getSimpleRecoveryFlag() ? "True" : "False");
+            properties.put("CommaSeparator", rootLayoutView.getCommaFlag() ? "True" : "False");
+            properties.put("SemicolonSeparator", rootLayoutView.getSemicolonFlag() ? "True" : "False");
+            //saving to file
+            try {
+                File file = new File(PROPERTIES_STORE);
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                file.setWritable(true);
+                FileOutputStream out = new FileOutputStream(file);
+                properties.storeToXML(out, "File contains properties of Gaze Reckon application. " +
+                        "Authors does not responsible for the correct operation of the program with changed configuration file." +
+                        "Make changes at your own risk.");
+                out.close();
+                file.setReadOnly();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            File file = new File(PROPERTIES_STORE);
+            if (file.exists()) file.delete();
         }
     }
 }

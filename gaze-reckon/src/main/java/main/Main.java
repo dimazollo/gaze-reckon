@@ -67,7 +67,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Eye-tracker data analyzer");
+        this.primaryStage.setTitle("Gaze Reckon");
         initRootLayout();
         Serializer deserializer = new Serializer(this);
         deserializer.load();
