@@ -19,7 +19,6 @@ import java.util.Properties;
 public class Serializer {
     //saving & loading states of flags and other
     private static final String PROPERTIES_STORE = "gaze-reckon.properties";
-    private final Main mainApp;
     ParserView parserView;
     FDView fdView;
     RootLayoutView rootLayoutView;
@@ -27,7 +26,6 @@ public class Serializer {
 
     public Serializer(Main mainApp) {
         properties = new Properties();
-        this.mainApp = mainApp;
         parserView = mainApp.getParserView();
         fdView = mainApp.getFdView();
         rootLayoutView = mainApp.getRootLayoutView();
