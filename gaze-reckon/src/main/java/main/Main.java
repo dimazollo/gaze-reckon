@@ -3,6 +3,7 @@ package main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -68,6 +69,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Gaze Reckon");
+        //adding icons
+        this.primaryStage.getIcons().add(new Image("/icons/AppIcon16.png"));
+        this.primaryStage.getIcons().add(new Image("/icons/AppIcon32.png"));
+        this.primaryStage.getIcons().add(new Image("/icons/AppIcon48.png"));
+
         initRootLayout();
         Serializer deserializer = new Serializer(this);
         deserializer.load();
