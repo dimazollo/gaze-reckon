@@ -105,9 +105,7 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
             primaryStage.setResizable(false);
-
-            //Saving data on exit
-
+            primaryStage.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
