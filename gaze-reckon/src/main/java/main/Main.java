@@ -14,6 +14,7 @@ import serializer.Serializer;
 import views.FDView;
 import views.ParserView;
 import views.RootLayoutView;
+import views.graphs.ViewOfData;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class Main extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private RootLayoutView rootLayoutView;
-
+    private ViewOfData viewOfData;
     private ParserView parserView;
     private FDView fdView;
 
@@ -100,6 +101,7 @@ public class Main extends Application {
             HBox hBox = new HBox();
             hBox.getChildren().add(initFDLayout());
             hBox.getChildren().add(0, initParserLayout()); // Adding to the left side.
+            viewOfData.setMainApp(this);
             rootLayout.setCenter(hBox);
             //
             primaryStage.setScene(scene);
@@ -136,4 +138,6 @@ public class Main extends Application {
         }
         return null;
     }
+
+
 }
