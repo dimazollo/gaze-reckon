@@ -69,7 +69,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Gaze Reckon");
-        //adding icons
+        // Adding icons.
         this.primaryStage.getIcons().add(new Image("/icons/AppIcon16.png"));
         this.primaryStage.getIcons().add(new Image("/icons/AppIcon32.png"));
         this.primaryStage.getIcons().add(new Image("/icons/AppIcon48.png"));
@@ -77,7 +77,7 @@ public class Main extends Application {
         initRootLayout();
         Serializer deserializer = new Serializer(this);
         deserializer.load();
-        //setting up onClose saving configuration
+        // Setting up onClose saving configuration.
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
             Serializer serializer = new Serializer(this);
@@ -88,18 +88,18 @@ public class Main extends Application {
 
     private void initRootLayout() {
         try {
-            //Load root layout from fxml file
+            // Load root layout from fxml file
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("/RootLayout.fxml"));
             rootLayout = loader.load();
             rootLayoutView = loader.getController();
             rootLayoutView.setMainApp(this);
 
-            //Show the scene containing root layout.
+            // Show the scene containing root layout.
             Scene scene = new Scene(rootLayout);
             HBox hBox = new HBox();
             hBox.getChildren().add(initFDLayout());
-            hBox.getChildren().add(0, initParserLayout()); //adding to the left side
+            hBox.getChildren().add(0, initParserLayout()); // Adding to the left side.
             rootLayout.setCenter(hBox);
             //
             primaryStage.setScene(scene);
