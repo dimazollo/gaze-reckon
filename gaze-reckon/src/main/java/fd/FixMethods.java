@@ -77,7 +77,6 @@ public final class FixMethods {
                 }
                 start = start + wt;
                 wt = interval;
-
             }
         }
         System.out.println(result);
@@ -113,11 +112,9 @@ public final class FixMethods {
                     }
                     start = start + wt;
                     wt = interval;
-
                 }
             }
         }
-
     }
 
     private static double dispersion(ArrayList<Double> array, int start, int n) {

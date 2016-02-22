@@ -105,7 +105,6 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
             primaryStage.setResizable(false);
-            primaryStage.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
