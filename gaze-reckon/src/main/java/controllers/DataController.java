@@ -20,8 +20,6 @@ import java.util.*;
  * created on 16.10.2015
  */
 public class DataController implements Writable {
-
-
     private static DataController instance;
     private final Property<Main> mainApp;
     //input files
@@ -77,7 +75,7 @@ public class DataController implements Writable {
     }
 
     //mapTrackersAndStimuli build a HashMap of tracker messages and related stimuli in compliance with their time
-    private LinkedHashMap<Message, Stimulus> mapTrackersAndStimuli(ArrayList<Message> messages, ArrayList<Stimulus> stimuli) {
+    public static LinkedHashMap<Message, Stimulus> mapTrackersAndStimuli(ArrayList<Message> messages, ArrayList<Stimulus> stimuli) {
         Date stimulusStart = new Date();
         Date stimulusEnd = new Date();
         Date presentingTime = new Date();
@@ -216,7 +214,7 @@ public class DataController implements Writable {
     // Now instead of LinkedList<<HashMap<String, Boolean>> it is able to use only Pair<String, Boolean>;
     private LinkedList<HashMap<String, Boolean>> getFixationsList(String column, LinkedHashMap<Message, Stimulus> mappedData) {
         FDView fdvc = mainApp.getValue().getFdView();
-        ArrayList<ArrayList<Double>> arrayOfDistances = getDistances(column, mappedData);
+        ArrayList<ArrayList<Double>> arrayOfDistances = computeDistances(column, mappedData);
         LinkedList<HashMap<String, Boolean>> list = new LinkedList<>();
         for (ArrayList<Double> distances : arrayOfDistances) {
             ArrayList<Boolean> idtList = FixMethods.idt(distances, fdvc.getIdtThresholdAsInt(), fdvc.getIdtLatencyAsInt());
@@ -244,7 +242,7 @@ public class DataController implements Writable {
     }
 
     //getDeltas return all "deltas" from single tracker message;
-    private HashMap<String, Double> getDeltas(Message msg, Stimulus stmls) {
+    private static HashMap<String, Double> getDeltas(Message msg, Stimulus stmls) {
         HashMap<String, Double> row = new HashMap<>();
         row.put(Message.DELTA_AVERAGE, msg.values.frame.avg.getDistance(stmls.getPosition()));
         row.put(Message.DELTA_RAW, msg.values.frame.raw.getDistance(stmls.getPosition()));
@@ -255,9 +253,9 @@ public class DataController implements Writable {
         return row;
     }
 
-    //getDistances returns a number of arrayLists of "delta" values related to every stimulus specified by column
-    // for example getDistances(Message.DELTA_AVERAGE, mappedData) will return only "deltaAverage" field's values;
-    private ArrayList<ArrayList<Double>> getDistances(String column, LinkedHashMap<Message, Stimulus> mappedData) {
+    //computeDistances returns a number of arrayLists of "delta" values related to every stimulus specified by column
+    // for example computeDistances(Message.DELTA_AVERAGE, mappedData) will return only "deltaAverage" field's values;
+    public static ArrayList<ArrayList<Double>> computeDistances(String column, LinkedHashMap<Message, Stimulus> mappedData) {
         ArrayList<ArrayList<Double>> arrayLists = new ArrayList<>();
         ArrayList<Double> doubleArrayList = new ArrayList<>();
         Stimulus current = mappedData.entrySet().iterator().next().getValue();
