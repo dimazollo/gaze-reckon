@@ -2,6 +2,7 @@ package main;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -76,6 +77,7 @@ public class Main extends Application {
         this.primaryStage.getIcons().add(new Image("/icons/AppIcon48.png"));
 
         initRootLayout();
+        initViewOfData();
         Serializer deserializer = new Serializer(this);
         deserializer.load();
         // Setting up onClose saving configuration.
@@ -85,6 +87,23 @@ public class Main extends Application {
             serializer.store();
             System.exit(0);
         });
+    }
+
+    private void initViewOfData() throws IOException {
+        // Data graphics.
+        viewOfData = new ViewOfData();
+        Stage stageViewOfData = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/fxml/graphs.fxml"));
+        Parent root = fxmlLoader.load();
+        viewOfData = fxmlLoader.getController();
+        stageViewOfData.setTitle("Graphs");
+        stageViewOfData.setScene(new Scene(root));
+        stageViewOfData.setMinHeight(600);
+        stageViewOfData.setMinWidth(400);
+        viewOfData.setMainApp(this);
+        rootLayoutView.setViewOfData(viewOfData);
+        rootLayoutView.setStage(stageViewOfData);
     }
 
     private void initRootLayout() {
@@ -102,10 +121,7 @@ public class Main extends Application {
             hBox.getChildren().add(initFDLayout());
             hBox.getChildren().add(0, initParserLayout()); // Adding to the left side.
 
-            // Data graphics.
-            viewOfData = new ViewOfData();
-            viewOfData.setMainApp(this);
-            rootLayoutView.setViewOfData(viewOfData);//add this line, Ivan
+
 
             rootLayout.setCenter(hBox);
 

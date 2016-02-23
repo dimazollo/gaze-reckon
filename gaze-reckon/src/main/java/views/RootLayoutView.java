@@ -4,9 +4,6 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.RadioMenuItem;
@@ -42,6 +39,7 @@ public class RootLayoutView {
     @FXML
     private CheckMenuItem useConfigFlag;
     private ViewOfData viewOfData;
+    private Stage stageViewOfData;
 
     @FXML
     private void initialize() {
@@ -139,19 +137,15 @@ public class RootLayoutView {
     }
 
     public void actionLineChart(ActionEvent actionEvent) throws IOException {
-        Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/fxml/graphs.fxml"));
-        Parent root = fxmlLoader.load();
-        viewOfData = fxmlLoader.getController();//eta stroka voobhe nugna?
-        stage.setTitle("Graphs");
-        stage.setScene(new Scene(root));
-        stage.setMinHeight(600);
-        stage.setMinWidth(400);
-        stage.show();
+
+       stageViewOfData.show();
     }
 
     public void setViewOfData(ViewOfData viewOfData) {
         this.viewOfData = viewOfData;
+    }
+
+    public void setStage(Stage stage) {
+        this.stageViewOfData = stage;
     }
 }
