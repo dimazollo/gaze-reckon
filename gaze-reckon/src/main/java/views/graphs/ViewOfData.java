@@ -2,6 +2,7 @@ package views.graphs;
 
 import controllers.DataController;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,8 +22,8 @@ import java.util.ResourceBundle;
 /**
  * Created by Vano on 22.02.2016.
  */
-public class ViewOfData implements Initializable {
-    Property<Main> mainApp;
+public class ViewOfData implements Initializable{
+    private Property<Main> mainApp;
     @FXML
     private NumberAxis botAxis;
     @FXML
@@ -40,24 +41,26 @@ public class ViewOfData implements Initializable {
         lineChart.setTitle("Graphs");
         XYChart.Series series1 = new XYChart.Series();
         series1.setName("Distances between points and center of the stimulus");
-        ObservableList<XYChart.Data> datas = FXCollections.observableArrayList();
+        ObservableList<XYChart.Data> data = FXCollections.observableArrayList(); //data - данные во множественном числе. datum - данные в единственном числе
         ArrayList<ArrayList<Double>> delta = computeDistances(Message.DELTA_AVERAGE);
         ArrayList<ArrayList<Double>> time = computeDistances(Message.TIMESTAMP);
         for (int i = 0; i < delta.size(); i++) {
             for (int j = 0; j < delta.get(i).size(); j++) {
-                datas.add(new XYChart.Data(time.get(i).get(j), delta.get(i).get(j)));
+                data.add(new XYChart.Data(time.get(i).get(j), delta.get(i).get(j)));
             }
         }
-        series1.setData(datas);
+        series1.setData(data);
         lineChart.getData().add(series1);
     }
 
 
     public void setMainApp(Main mainApp) {
+        this.mainApp = new SimpleObjectProperty<>();
         this.mainApp.setValue(mainApp);
     }
 
-    // Например: computeDistances(Message.DELTA_AVERAGE, mappedData) вернёт только значения полей "deltaAverage";
+    // Производит вычисление расстояний от точки взгляда до центра мишени и возвращает по массиву таких расстояний для каждого стимула
+    // Например: computeDistances(Message.DELTA_AVERAGE, mappedData) вернёт только расстояния по "deltaAverage";
     private ArrayList<ArrayList<Double>> computeDistances(String column) {
         ArrayList<Message> messages = mainApp.getValue().getMessages();
         ArrayList<Stimulus> stimuli = mainApp.getValue().getStimuli();

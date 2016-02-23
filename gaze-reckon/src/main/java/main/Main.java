@@ -107,7 +107,7 @@ public class Main extends Application {
             viewOfData.setMainApp(this);
 
             rootLayout.setCenter(hBox);
-            //
+
             primaryStage.setScene(scene);
             primaryStage.show();
             primaryStage.setResizable(false);
