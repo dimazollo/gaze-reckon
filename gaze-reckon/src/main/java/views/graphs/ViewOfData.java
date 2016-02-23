@@ -15,10 +15,11 @@ import java.util.LinkedHashMap;
 public class ViewOfData {
     Property<Main> mainApp;
 
-    public void metod(){
+    public void metod() {
         ArrayList<Message> messages = mainApp.getValue().getMessages();
         //messages.get(0).values.frame.avg
     }
+
     public void setMainApp(Main mainApp) {
         this.mainApp.setValue(mainApp);
     }
