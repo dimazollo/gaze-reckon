@@ -5,6 +5,7 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
@@ -33,7 +34,7 @@ public class ViewOfData implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        viewing();
+        //viewing();
 
     }
 
@@ -66,5 +67,10 @@ public class ViewOfData implements Initializable{
         ArrayList<Stimulus> stimuli = mainApp.getValue().getStimuli();
         LinkedHashMap<Message, Stimulus> mappedData = DataController.mapTrackersAndStimuli(messages, stimuli);
         return DataController.computeDistances(column, mappedData);
+    }
+
+
+    public void cliked(Event event) {
+        viewing();
     }
 }

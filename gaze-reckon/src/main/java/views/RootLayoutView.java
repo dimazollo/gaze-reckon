@@ -2,13 +2,21 @@ package views;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
+import javafx.stage.Stage;
 import main.Main;
 import serializer.Serializer;
+import views.graphs.ViewOfData;
+
+import java.io.IOException;
 
 /**
  * @Author Dmitry Volovod
@@ -33,6 +41,7 @@ public class RootLayoutView {
     private ToggleGroup fieldSeparatorToggleGroup;
     @FXML
     private CheckMenuItem useConfigFlag;
+    private ViewOfData viewOfData;
 
     @FXML
     private void initialize() {
@@ -127,5 +136,22 @@ public class RootLayoutView {
 
     public void setMainApp(Main mainApp) {
         this.mainApp.setValue(mainApp);
+    }
+
+    public void actionLineChart(ActionEvent actionEvent) throws IOException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/fxml/graphs.fxml"));
+        Parent root = fxmlLoader.load();
+        viewOfData = fxmlLoader.getController();//eta stroka voobhe nugna?
+        stage.setTitle("Graphs");
+        stage.setScene(new Scene(root));
+        stage.setMinHeight(600);
+        stage.setMinWidth(400);
+        stage.show();
+    }
+
+    public void setViewOfData(ViewOfData viewOfData) {
+        this.viewOfData = viewOfData;
     }
 }

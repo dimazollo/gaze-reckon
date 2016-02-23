@@ -105,6 +105,7 @@ public class Main extends Application {
             // Data graphics.
             viewOfData = new ViewOfData();
             viewOfData.setMainApp(this);
+            rootLayoutView.setViewOfData(viewOfData);//add this line, Ivan
 
             rootLayout.setCenter(hBox);
 
@@ -142,6 +143,5 @@ public class Main extends Application {
         }
         return null;
     }
-
 
 }
