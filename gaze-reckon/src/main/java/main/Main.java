@@ -101,6 +101,9 @@ public class Main extends Application {
             HBox hBox = new HBox();
             hBox.getChildren().add(initFDLayout());
             hBox.getChildren().add(0, initParserLayout()); // Adding to the left side.
+            //TODO не работает setMainApp
+            viewOfData = new ViewOfData(); //сначало не работал не было этой строки
+            //щас все равно не работает
             viewOfData.setMainApp(this);
             rootLayout.setCenter(hBox);
             //
