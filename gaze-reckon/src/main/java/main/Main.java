@@ -101,7 +101,11 @@ public class Main extends Application {
             HBox hBox = new HBox();
             hBox.getChildren().add(initFDLayout());
             hBox.getChildren().add(0, initParserLayout()); // Adding to the left side.
+
+            // Data graphics.
+            viewOfData = new ViewOfData();
             viewOfData.setMainApp(this);
+
             rootLayout.setCenter(hBox);
             //
             primaryStage.setScene(scene);
