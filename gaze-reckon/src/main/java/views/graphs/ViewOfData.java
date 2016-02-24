@@ -5,25 +5,25 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.TextField;
 import main.Main;
 import model.eyetracker.Message;
 import model.test.Stimulus;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.ResourceBundle;
 
 /**
  * Created by Vano on 22.02.2016.
  */
-public class ViewOfData implements Initializable{
+public class ViewOfData {
+    @FXML
+    private TextField countStimuls;
     private Property<Main> mainApp;
     @FXML
     private NumberAxis botAxis;
@@ -32,22 +32,24 @@ public class ViewOfData implements Initializable{
     @FXML
     private LineChart lineChart;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        //viewing();
-
-    }
-
-    private void viewing() {
+    private void viewing(int countStimuls) {
         lineChart.setTitle("Graphs");
         XYChart.Series series1 = new XYChart.Series();
         series1.setName("Distances between points and center of the stimulus");
         ObservableList<XYChart.Data> data = FXCollections.observableArrayList(); //data - данные во множественном числе. datum - данные в единственном числе
         ArrayList<ArrayList<Double>> delta = computeDistances(Message.DELTA_AVERAGE);
-        ArrayList<ArrayList<Double>> time = computeDistances(Message.TIMESTAMP);
-        for (int i = 0; i < delta.size(); i++) {
+        //ArrayList<ArrayList<Double>> time = mainApp.getValue().getStimuli().get(0).getTimestampAsString();
+        if (countStimuls == 0) {
+            countStimuls = delta.size();
+        }
+        if(countStimuls > delta.size()){
+            return;
+        }
+        int count = 0;
+        for (int i = 0; i < countStimuls; i++) {
             for (int j = 0; j < delta.get(i).size(); j++) {
-                data.add(new XYChart.Data(time.get(i).get(j), delta.get(i).get(j)));
+                data.add(new XYChart.Data(count, delta.get(i).get(j)));
+                count++;
             }
         }
         series1.setData(data);
@@ -70,7 +72,14 @@ public class ViewOfData implements Initializable{
     }
 
 
-    public void cliked(Event event) {
-        viewing();
+    public void showAllStimuls(ActionEvent actionEvent) {
+        lineChart.getData().clear();
+        viewing(0);
+    }
+
+    public void showStimuls(ActionEvent actionEvent) {
+        lineChart.getData().clear();
+        Integer count = Integer.valueOf(countStimuls.getText());
+        viewing(count);
     }
 }
