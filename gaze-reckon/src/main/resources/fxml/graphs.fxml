@@ -18,9 +18,9 @@
                       <NumberAxis fx:id="leftAxis" side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <Button layoutX="10.0" layoutY="2.0" mnemonicParsing="false" onAction="#showAllStimuls" text="AllStimuls" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="2.0" />
-                  <Button layoutX="73.0" layoutY="2.0" mnemonicParsing="false" onAction="#showStimuls" text="Stimuls" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="2.0" />
-                  <TextField fx:id="countStimuls" layoutX="216.6" layoutY="12.0" prefHeight="25.0" prefWidth="47.0" AnchorPane.leftAnchor="150.0" />
+                  <Button layoutX="504.0" layoutY="11.0" mnemonicParsing="false" onAction="#showStimuls" text="Show" AnchorPane.rightAnchor="20.0" />
+                  <Slider fx:id="sliderCountStimuls" layoutX="81.6" layoutY="17.0" max="1000.0" min="1.0" prefHeight="14.0" prefWidth="425.0" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="90.0" />
+                  <Label fx:id="lblCount" layoutX="27.0" layoutY="16.0" prefHeight="17.0" prefWidth="50.0" text="5" textAlignment="RIGHT" />
                </children></AnchorPane>
       </content>
     </TitledPane>

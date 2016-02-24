@@ -1,6 +1,7 @@
 package views.graphs;
 
 import controllers.DataController;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -10,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import main.Main;
 import model.eyetracker.Message;
@@ -22,6 +25,11 @@ import java.util.LinkedHashMap;
  * Created by Vano on 22.02.2016.
  */
 public class ViewOfData {
+    @FXML
+    private Label lblCount;
+    @FXML
+    private Slider sliderCountStimuls;
+
     @FXML
     private TextField countStimuls;
     private Property<Main> mainApp;
@@ -42,7 +50,7 @@ public class ViewOfData {
         if (countStimuls == 0) {
             countStimuls = delta.size();
         }
-        if(countStimuls > delta.size()){
+        if (countStimuls > delta.size()) {
             return;
         }
         int count = 0;
@@ -72,14 +80,29 @@ public class ViewOfData {
     }
 
 
-    public void showAllStimuls(ActionEvent actionEvent) {
+    public void showStimuls(ActionEvent actionEvent) {
+        ArrayList<ArrayList<Double>> delta = computeDistances(Message.DELTA_AVERAGE);
         lineChart.getData().clear();
-        viewing(0);
+//        Integer count = Integer.valueOf(countStimuls.getText());
+        sliderCountStimuls.setMin(1);
+        sliderCountStimuls.setMax(delta.size());
+        int sliderCount = (int) sliderCountStimuls.getValue();
+        viewing(sliderCount);
     }
 
-    public void showStimuls(ActionEvent actionEvent) {
-        lineChart.getData().clear();
-        Integer count = Integer.valueOf(countStimuls.getText());
-        viewing(count);
+    @FXML
+    private void initialize() {
+        initListener();
+
+    }
+
+    public void updateCountLabel() {
+        lblCount.setText(String.valueOf(sliderCountStimuls.getValue()));
+    }
+
+    private void initListener() {//TODO надо исправить слушателя
+        sliderCountStimuls.getProperties().addListener((InvalidationListener) (InvalidationListener)->{
+            updateCountLabel();
+        });
     }
 }
