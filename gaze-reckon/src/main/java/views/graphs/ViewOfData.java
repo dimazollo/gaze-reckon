@@ -47,6 +47,7 @@ public class ViewOfData {
 
 
     public void updateDistancesGraph() {
+        //TODO - Это условие и подсчёт расстояний нужно отсюда безопасно убрать.
         if(distances==null){
             distances = computeDistances(Message.DELTA_AVERAGE);
         }

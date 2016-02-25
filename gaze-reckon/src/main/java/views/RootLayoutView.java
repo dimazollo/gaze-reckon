@@ -4,12 +4,8 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import main.Main;
 import serializer.Serializer;
-import views.graphs.ViewOfData;
-
-import java.io.IOException;
 
 /**
  * @Author Dmitry Volovod
@@ -36,15 +32,43 @@ public class RootLayoutView {
     private ToggleGroup fieldSeparatorToggleGroup;
     @FXML
     private CheckMenuItem useConfigFlag;
-    private ViewOfData viewOfData;
-    private ParserView parserView;
-    private Stage stageViewOfData;
 
     @FXML
     private void initialize() {
         linearInterpolationFlag.setSelected(true);
         simpleRecoveryFlag.setSelected(true);
         listwiseDeletionFlag.setSelected(false);
+    }
+
+    public void showCharts() {
+        mainApp.getValue().getViewOfData().updateDistancesGraph(); // Обновление графика с расстояниями перед открытием окошка с графиками.
+        mainApp.getValue().getViewOfDataStage().show();
+    }
+
+    @FXML
+    private void handleAbout() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("About");
+        System.out.println();
+        alert.setHeaderText("Gaze Reckon");
+        alert.setContentText("Application for processing data files\n" +
+                "received from \"The Eye Tribe\" eye-tracker.\n\n" +
+                "Dmitry Volovod, Mikhail Turicyn\n" +
+                "INPE NRNU MEPHI, 2015");
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleWriteData() {
+        ParserView parserView = mainApp.getValue().getParserView();
+        parserView.handleStartBtn();
+    }
+
+    @FXML
+    private void handleExit() {
+        Serializer deserializer = new Serializer(mainApp.getValue());
+        deserializer.store();
+        System.exit(0);
     }
 
     public String getFieldSeparator() {
@@ -105,62 +129,7 @@ public class RootLayoutView {
         useConfigFlag.setSelected(flag);
     }
 
-    @FXML
-    private void handleAbout() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("About");
-        System.out.println();
-        alert.setHeaderText("Gaze Reckon");
-        alert.setContentText("Application for processing data files\n" +
-                "received from \"The Eye Tribe\" eye-tracker.\n\n" +
-                "Dmitry Volovod, Mikhail Turicyn\n" +
-                "INPE NRNU MEPHI, 2015");
-        alert.showAndWait();
-    }
-
-    @FXML
-    private void handleWriteData() {
-        ParserView parserView = mainApp.getValue().getParserView();
-        parserView.handleStartBtn();
-    }
-
-    @FXML
-    private void handleExit() {
-        Serializer deserializer = new Serializer(mainApp.getValue());
-        deserializer.store();
-        System.exit(0);
-    }
-
     public void setMainApp(Main mainApp) {
         this.mainApp.setValue(mainApp);
     }
-
-    public void actionShowCharts() throws IOException {
-        viewOfData.updateDistancesGraph(); // Обновление графика с расстояниями перед открытием окошка с графиками.
-        stageViewOfData.show();
-    }
-
-    public void setViewOfData(ViewOfData viewOfData) {
-        this.viewOfData = viewOfData;
-    }
-
-    public void setParserView(ParserView parserView) {
-        this.parserView = parserView;
-    }
-
-    public void setStage(Stage stage) {
-        this.stageViewOfData = stage;
-    }
-
-    public void updateEnableBtnShowCharts(){
-        if((parserView.getTrackerFileAddress()!="")&&(parserView.getTestFileAddress()!="")){
-            btnShowCharts.setVisible(true);
-        }
-    }
-   /* private void initListeners() {
-      //  parserView.trackerFileAddress.getProperties().addListener; //TODO Дим Сделай чтоб эта строка заработала и выполняла то что снизу
-
-            updateEnableBtnShowCharts();
-
-    }*/
 }

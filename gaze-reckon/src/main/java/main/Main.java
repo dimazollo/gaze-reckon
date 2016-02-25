@@ -1,6 +1,7 @@
 package main;
 
 import javafx.application.Application;
+import javafx.beans.property.Property;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,10 +27,16 @@ import java.util.ArrayList;
  */
 public class Main extends Application {
 
+    public Property<ArrayList<Message>> messagesProperty;
+    public Property<ArrayList<Stimulus>> stimuliProperty;
     private volatile ArrayList<Message> messages;    //set of tracker messages of eye-tracking data
-    private ArrayList<Stimulus> stimuli;    //set of stimuli of experiment
+    private volatile ArrayList<Stimulus> stimuli;    //set of stimuli of experiment
+
     private Stage primaryStage;
+    private Stage viewOfDataStage;
+
     private BorderPane rootLayout;
+
     private RootLayoutView rootLayoutView;
     private ViewOfData viewOfData;
     private ParserView parserView;
@@ -67,6 +74,14 @@ public class Main extends Application {
         return rootLayoutView;
     }
 
+    public ViewOfData getViewOfData() {
+        return viewOfData;
+    }
+
+    public Stage getViewOfDataStage() {
+        return viewOfDataStage;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
@@ -90,20 +105,18 @@ public class Main extends Application {
     }
 
     private void initViewOfData() throws IOException {
-        // Data graphics.
-        viewOfData = new ViewOfData();
-        Stage stageViewOfData = new Stage();
+        // Data graphs.
+        Stage viewOfDataStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/fxml/graphs.fxml"));
         Parent root = fxmlLoader.load();
         viewOfData = fxmlLoader.getController();
-        stageViewOfData.setTitle("Graphs");
-        stageViewOfData.setScene(new Scene(root));
-        stageViewOfData.setMinHeight(600);
-        stageViewOfData.setMinWidth(400);
+        viewOfDataStage.setTitle("Graphs");
+        viewOfDataStage.setScene(new Scene(root));
+        viewOfDataStage.setMinHeight(600);
+        viewOfDataStage.setMinWidth(400);
         viewOfData.setMainApp(this);
-        rootLayoutView.setViewOfData(viewOfData);
-        rootLayoutView.setStage(stageViewOfData);
+        this.viewOfDataStage = viewOfDataStage;
     }
 
     private void initRootLayout() {
@@ -120,7 +133,6 @@ public class Main extends Application {
             HBox hBox = new HBox();
             hBox.getChildren().add(initFDLayout());
             hBox.getChildren().add(0, initParserLayout()); // Adding to the left side.
-
 
             rootLayout.setCenter(hBox);
 
@@ -139,7 +151,6 @@ public class Main extends Application {
             AnchorPane parserForm = loader.load();
             parserView = loader.getController();
             parserView.setMainApp(this);
-            rootLayoutView.setParserView(parserView);
             return parserForm;
         } catch (IOException e) {
             e.printStackTrace();

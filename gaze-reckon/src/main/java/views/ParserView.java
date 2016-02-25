@@ -35,7 +35,7 @@ public class ParserView {
     private FDView fdView;
     private RootLayoutView rootLayoutView;
     @FXML
-    public TextField trackerFileAddress;
+    private TextField trackerFileAddress;
     @FXML
     private TextField testFileAddress;
     @FXML
@@ -440,20 +440,20 @@ public class ParserView {
             linkedHashMap.put(FDView.LNX, fdView.getLogarithm());
         if (getAvg()) linkedHashMap.put(Message.AVERAGE, avg);
         if (getRaw()) linkedHashMap.put(Message.RAW, raw);
-        if (getdAvg() && testFileSelected) linkedHashMap.put(Message.DELTA_AVERAGE, dAvg);
-        if (getdRaw() && testFileSelected) linkedHashMap.put(Message.DELTA_RAW, dRaw);
-        if (getlEyeAvg()) linkedHashMap.put(Message.LEFT_EYE_AVG, lEyeAvg);
-        if (getlEyeRaw()) linkedHashMap.put(Message.LEFT_EYE_RAW, lEyeRaw);
-        if (getlEyeDAvg() && testFileSelected) linkedHashMap.put(Message.LEFT_EYE_DELTA_AVG, lEyeDAvg);
-        if (getlEyeDRaw() && testFileSelected) linkedHashMap.put(Message.LEFT_EYE_DELTA_RAW, lEyeDRaw);
-        if (getlEyePCenter()) linkedHashMap.put(Message.LEFT_EYE_PCENTER, lEyePCenter);
-        if (getlEyePSize()) linkedHashMap.put(Message.LEFT_EYE_PSIZE, lEyePSize);
-        if (getrEyeAvg()) linkedHashMap.put(Message.RIGHT_EYE_AVG, rEyeAvg);
-        if (getrEyeRaw()) linkedHashMap.put(Message.RIGHT_EYE_RAW, rEyeRaw);
-        if (getrEyeDAvg() && testFileSelected) linkedHashMap.put(Message.RIGHT_EYE_DELTA_AVG, rEyeDAvg);
-        if (getrEyeDRaw() && testFileSelected) linkedHashMap.put(Message.RIGHT_EYE_DELTA_RAW, rEyeDRaw);
-        if (getrEyePCenter()) linkedHashMap.put(Message.RIGHT_EYE_PCENTER, rEyePCenter);
-        if (getrEyePSize()) linkedHashMap.put(Message.RIGHT_EYE_PSIZE, rEyePSize);
+        if (getDeltaAvg() && testFileSelected) linkedHashMap.put(Message.DELTA_AVERAGE, dAvg);
+        if (getDeltaRaw() && testFileSelected) linkedHashMap.put(Message.DELTA_RAW, dRaw);
+        if (getLeftEyeAvg()) linkedHashMap.put(Message.LEFT_EYE_AVG, lEyeAvg);
+        if (getLeftEyeRaw()) linkedHashMap.put(Message.LEFT_EYE_RAW, lEyeRaw);
+        if (getLeftEyeDAvg() && testFileSelected) linkedHashMap.put(Message.LEFT_EYE_DELTA_AVG, lEyeDAvg);
+        if (getLeftEyeDRaw() && testFileSelected) linkedHashMap.put(Message.LEFT_EYE_DELTA_RAW, lEyeDRaw);
+        if (getLeftEyePCenter()) linkedHashMap.put(Message.LEFT_EYE_PCENTER, lEyePCenter);
+        if (getLeftEyePSize()) linkedHashMap.put(Message.LEFT_EYE_PSIZE, lEyePSize);
+        if (getRightEyeAvg()) linkedHashMap.put(Message.RIGHT_EYE_AVG, rEyeAvg);
+        if (getRightEyeRaw()) linkedHashMap.put(Message.RIGHT_EYE_RAW, rEyeRaw);
+        if (getRightEyeDAvg() && testFileSelected) linkedHashMap.put(Message.RIGHT_EYE_DELTA_AVG, rEyeDAvg);
+        if (getRightEyeDRaw() && testFileSelected) linkedHashMap.put(Message.RIGHT_EYE_DELTA_RAW, rEyeDRaw);
+        if (getRightEyePCenter()) linkedHashMap.put(Message.RIGHT_EYE_PCENTER, rEyePCenter);
+        if (getRightEyePSize()) linkedHashMap.put(Message.RIGHT_EYE_PSIZE, rEyePSize);
         if (getTime()) linkedHashMap.put(Message.TIME, time);
         if (getCategory()) linkedHashMap.put(Message.CATEGORY, category);
         if (getRequest()) linkedHashMap.put(Message.REQUEST, request);
@@ -510,111 +510,111 @@ public class ParserView {
         this.raw.setSelected(flag);
     }
 
-    public boolean getdAvg() {
+    public boolean getDeltaAvg() {
         return dAvg.isSelected();
     }
 
-    public boolean getdRaw() {
+    public boolean getDeltaRaw() {
         return dRaw.isSelected();
     }
 
-    public void setdRaw(Boolean flag) {
+    public void setDeltaRaw(Boolean flag) {
         this.dRaw.setSelected(flag);
     }
 
-    public boolean getlEyeAvg() {
+    public boolean getLeftEyeAvg() {
         return lEyeAvg.isSelected();
     }
 
-    public void setlEyeAvg(Boolean flag) {
+    public void setLeftEyeAvg(Boolean flag) {
         this.lEyeAvg.setSelected(flag);
     }
 
-    public boolean getlEyeRaw() {
+    public boolean getLeftEyeRaw() {
         return lEyeRaw.isSelected();
     }
 
-    public void setlEyeRaw(Boolean flag) {
+    public void setLeftEyeRaw(Boolean flag) {
         this.lEyeRaw.setSelected(flag);
     }
 
-    public boolean getlEyeDAvg() {
+    public boolean getLeftEyeDAvg() {
         return lEyeDAvg.isSelected();
     }
 
-    public void setlEyeDAvg(Boolean flag) {
+    public void setLeftEyeDAvg(Boolean flag) {
         this.lEyeDAvg.setSelected(flag);
     }
 
-    public boolean getlEyeDRaw() {
+    public boolean getLeftEyeDRaw() {
         return lEyeDRaw.isSelected();
     }
 
-    public void setlEyeDRaw(Boolean flag) {
+    public void setLeftEyeDRaw(Boolean flag) {
         this.lEyeDAvg.setSelected(flag);
     }
 
-    public boolean getlEyePCenter() {
+    public boolean getLeftEyePCenter() {
         return lEyePCenter.isSelected();
     }
 
-    public void setlEyePCenter(Boolean flag) {
+    public void setLeftEyePCenter(Boolean flag) {
         this.lEyePCenter.setSelected(flag);
     }
 
-    public boolean getlEyePSize() {
+    public boolean getLeftEyePSize() {
         return lEyePSize.isSelected();
     }
 
-    public void setlEyePSize(Boolean flag) {
+    public void setLeftEyePSize(Boolean flag) {
         this.lEyePSize.setSelected(flag);
     }
 
-    public boolean getrEyeAvg() {
+    public boolean getRightEyeAvg() {
         return rEyeAvg.isSelected();
     }
 
-    public void setrEyeAvg(Boolean flag) {
+    public void setRightEyeAvg(Boolean flag) {
         this.rEyeAvg.setSelected(flag);
     }
 
-    public boolean getrEyeRaw() {
+    public boolean getRightEyeRaw() {
         return rEyeRaw.isSelected();
     }
 
-    public void setrEyeRaw(Boolean flag) {
+    public void setRightEyeRaw(Boolean flag) {
         this.rEyeRaw.setSelected(flag);
     }
 
-    public boolean getrEyeDAvg() {
+    public boolean getRightEyeDAvg() {
         return rEyeDAvg.isSelected();
     }
 
-    public void setrEyeDAvg(Boolean flag) {
+    public void setRightEyeDAvg(Boolean flag) {
         this.rEyeDAvg.setSelected(flag);
     }
 
-    public boolean getrEyeDRaw() {
+    public boolean getRightEyeDRaw() {
         return rEyeDRaw.isSelected();
     }
 
-    public void setrEyeDRaw(Boolean flag) {
+    public void setRightEyeDRaw(Boolean flag) {
         this.rEyeDAvg.setSelected(flag);
     }
 
-    public boolean getrEyePCenter() {
+    public boolean getRightEyePCenter() {
         return rEyePCenter.isSelected();
     }
 
-    public void setrEyePCenter(Boolean flag) {
+    public void setRightEyePCenter(Boolean flag) {
         this.rEyePCenter.setSelected(flag);
     }
 
-    public boolean getrEyePSize() {
+    public boolean getRightEyePSize() {
         return rEyePSize.isSelected();
     }
 
-    public void setrEyePSize(Boolean flag) {
+    public void setRightEyePSize(Boolean flag) {
         this.rEyePSize.setSelected(flag);
     }
 

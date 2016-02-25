@@ -40,7 +40,7 @@
                 </Menu>
             <Menu mnemonicParsing="false" text="Graphs">
               <items>
-                <MenuItem fx:id="btnShowCharts" mnemonicParsing="false" onAction="#actionShowCharts" text="Charts" visible="false" />
+                <MenuItem fx:id="btnShowCharts" mnemonicParsing="false" onAction="#showCharts" text="Charts" />
               </items>
             </Menu>
                 <Menu mnemonicParsing="false" text="Help">
