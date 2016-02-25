@@ -1,7 +1,6 @@
 package views.graphs;
 
 import controllers.DataController;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -88,21 +87,22 @@ public class ViewOfData {
         sliderCountStimuls.setMax(delta.size());
         int sliderCount = (int) sliderCountStimuls.getValue();
         viewing(sliderCount);
+        updateCountLabel();
     }
 
-    @FXML
+   /* @FXML
     private void initialize() {
         initListener();
 
-    }
+    }*/
 
     public void updateCountLabel() {
-        lblCount.setText(String.valueOf(sliderCountStimuls.getValue()));
+        lblCount.setText(String.valueOf((int)sliderCountStimuls.getValue()));
     }
 
-    private void initListener() {//TODO надо исправить слушателя
-        sliderCountStimuls.getProperties().addListener((InvalidationListener) (InvalidationListener)->{
+   /* private void initListener() {//TODO надо исправить слушателя
+        sliderCountStimuls.getProperties().addListener(->{
             updateCountLabel();
         });
-    }
+    }*/
 }
