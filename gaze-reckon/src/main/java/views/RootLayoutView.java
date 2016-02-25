@@ -2,7 +2,6 @@ package views;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
@@ -136,9 +135,9 @@ public class RootLayoutView {
         this.mainApp.setValue(mainApp);
     }
 
-    public void actionLineChart(ActionEvent actionEvent) throws IOException {
-
-       stageViewOfData.show();
+    public void actionLineChart() throws IOException {
+        viewOfData.updateDistancesGraph(); // Обновление графика с расстояниями перед открытием окошка с графиками.
+        stageViewOfData.show();
     }
 
     public void setViewOfData(ViewOfData viewOfData) {

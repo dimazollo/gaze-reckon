@@ -110,7 +110,7 @@ public class Main extends Application {
         try {
             // Load root layout from fxml file
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/RootLayout.fxml"));
+            loader.setLocation(Main.class.getResource("/fxml/RootLayout.fxml"));
             rootLayout = loader.load();
             rootLayoutView = loader.getController();
             rootLayoutView.setMainApp(this);
@@ -120,7 +120,6 @@ public class Main extends Application {
             HBox hBox = new HBox();
             hBox.getChildren().add(initFDLayout());
             hBox.getChildren().add(0, initParserLayout()); // Adding to the left side.
-
 
 
             rootLayout.setCenter(hBox);
@@ -136,7 +135,7 @@ public class Main extends Application {
     private AnchorPane initParserLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/ParserLayout.fxml"));
+            loader.setLocation(Main.class.getResource("/fxml/ParserLayout.fxml"));
             AnchorPane parserForm = loader.load();
             parserView = loader.getController();
             parserView.setMainApp(this);
@@ -150,7 +149,7 @@ public class Main extends Application {
     private AnchorPane initFDLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/FDLayout.fxml"));
+            loader.setLocation(Main.class.getResource("/fxml/FDLayout.fxml"));
             AnchorPane FDForm = loader.load();
             fdView = loader.getController();
             return FDForm;

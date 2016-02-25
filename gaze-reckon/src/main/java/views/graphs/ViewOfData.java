@@ -1,12 +1,10 @@
 package views.graphs;
 
 import controllers.DataController;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -25,14 +23,16 @@ import java.util.LinkedHashMap;
  * Created by Vano on 22.02.2016.
  */
 public class ViewOfData {
+
+    private ArrayList<ArrayList<Double>> distances;
+    private Property<Main> mainApp;
     @FXML
     private Label lblCount;
     @FXML
-    private Slider sliderCountStimuls;
-
+    private Slider sliderCountStimuli;
+    //TODO Иван - разобраться с неиспольуземыми полями
     @FXML
-    private TextField countStimuls;
-    private Property<Main> mainApp;
+    private TextField countStimuli;
     @FXML
     private NumberAxis botAxis;
     @FXML
@@ -40,35 +40,49 @@ public class ViewOfData {
     @FXML
     private LineChart lineChart;
 
-    private void viewing(int countStimuls) {
+
+    @FXML
+    private void initialize() {
+        initListeners();
+        //TODO Иван - Здесь единожды выполнять всё что можно при инициализации модуля с графиками. (например названия задавать)
+    }
+
+
+    public void updateDistancesGraph() {
+        //TODO Иван - сделать чтобы подсчёт расстояний происходил только 1 раз, а не после каждого обновления слайдера.
+        distances = computeDistances(Message.DELTA_AVERAGE);
+        lineChart.getData().clear();
+        sliderCountStimuli.setMin(1);
+        sliderCountStimuli.setMax(distances.size());
+        int sliderValue = (int) sliderCountStimuli.getValue();
+        plotLineChart(sliderValue);
+    }
+
+
+    private void plotLineChart(int indexOfStimuli) {
         lineChart.setTitle("Graphs");
         XYChart.Series series1 = new XYChart.Series();
         series1.setName("Distances between points and center of the stimulus");
-        ObservableList<XYChart.Data> data = FXCollections.observableArrayList(); //data - данные во множественном числе. datum - данные в единственном числе
-        ArrayList<ArrayList<Double>> delta = computeDistances(Message.DELTA_AVERAGE);
         //ArrayList<ArrayList<Double>> time = mainApp.getValue().getStimuli().get(0).getTimestampAsString();
-        if (countStimuls == 0) {
-            countStimuls = delta.size();
+        ObservableList<XYChart.Data> distancesLineChartData = FXCollections.observableArrayList();
+        if (indexOfStimuli == 0) {
+            indexOfStimuli = distances.size();
         }
-        if (countStimuls > delta.size()) {
+        if (indexOfStimuli > distances.size()) {
             return;
         }
         int count = 0;
-        for (int i = 0; i < countStimuls; i++) {
-            for (int j = 0; j < delta.get(i).size(); j++) {
-                data.add(new XYChart.Data(count, delta.get(i).get(j)));
+        //TODO - Следует ограничить максимальное количество точек на графике. Если много точек - выводить некие средние или только каждую k-ю (каждую 5-ю, например).
+        for (int i = indexOfStimuli - 1; i < indexOfStimuli; i++) {  //В таком виде выводит только 1 стимул на график единовременно. (i = 0 чтобы выводить с начала)
+            for (int j = 0; j < distances.get(i).size(); j++) {
+                distancesLineChartData.add(new XYChart.Data(count, distances.get(i).get(j)));
                 count++;
             }
         }
-        series1.setData(data);
+        series1.setData(distancesLineChartData);
         lineChart.getData().add(series1);
     }
 
-
-    public void setMainApp(Main mainApp) {
-        this.mainApp = new SimpleObjectProperty<>();
-        this.mainApp.setValue(mainApp);
-    }
 
     // Производит вычисление расстояний от точки взгляда до центра мишени и возвращает по массиву таких расстояний для каждого стимула
     // Например: computeDistances(Message.DELTA_AVERAGE, mappedData) вернёт только расстояния по "deltaAverage";
@@ -80,29 +94,17 @@ public class ViewOfData {
     }
 
 
-    public void showStimuls(ActionEvent actionEvent) {
-        ArrayList<ArrayList<Double>> delta = computeDistances(Message.DELTA_AVERAGE);
-        lineChart.getData().clear();
-//        Integer count = Integer.valueOf(countStimuls.getText());
-        sliderCountStimuls.setMin(1);
-        sliderCountStimuls.setMax(delta.size());
-        int sliderCount = (int) sliderCountStimuls.getValue();
-        viewing(sliderCount);
-    }
-
-    @FXML
-    private void initialize() {
-        initListener();
-
-    }
-
-    public void updateCountLabel() {
-        lblCount.setText(String.valueOf(sliderCountStimuls.getValue()));
-    }
-
-    private void initListener() {//TODO надо исправить слушателя
-        sliderCountStimuls.getProperties().addListener((InvalidationListener) (InvalidationListener)->{
-            updateCountLabel();
+    private void initListeners() {
+        sliderCountStimuli.valueProperty().addListener((observable, oldValue, newValue) -> {
+            lblCount.setText(String.valueOf(newValue.intValue()));
+            // Обновление графика при изменении положения слайдера (ваш кэп).
+            updateDistancesGraph();
         });
+    }
+
+
+    public void setMainApp(Main mainApp) {
+        this.mainApp = new SimpleObjectProperty<>();
+        this.mainApp.setValue(mainApp);
     }
 }

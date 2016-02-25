@@ -346,15 +346,6 @@ public class ParserView {
     private void handleClearTestFileBtn() {
         dataController.setTestFile(null);
         testFileAddress.setText("");
-//        //TODO - disable by eventListener
-//        stimulusPosition.setDisable(true);
-//        dAvg.setDisable(true);
-//        dRaw.setDisable(true);
-//        lEyeDAvg.setDisable(true);
-//        lEyeDRaw.setDisable(true);
-//        rEyeDAvg.setDisable(true);
-//        rEyeDRaw.setDisable(true);
-//        clearTestFile.setDisable(true);
     }
 
     @FXML

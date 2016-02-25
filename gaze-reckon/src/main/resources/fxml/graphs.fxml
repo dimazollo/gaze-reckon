@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <Accordion maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.graphs.ViewOfData">
   <panes>
-    <TitledPane animated="false" text="LIneChart">
+    <TitledPane animated="false" text="LineChart">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -18,9 +18,9 @@
                       <NumberAxis fx:id="leftAxis" side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <Button layoutX="504.0" layoutY="11.0" mnemonicParsing="false" onAction="#showStimuls" text="Show" AnchorPane.rightAnchor="20.0" />
-                  <Slider fx:id="sliderCountStimuls" layoutX="81.6" layoutY="17.0" max="1000.0" min="1.0" prefHeight="14.0" prefWidth="425.0" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="90.0" />
-                  <Label fx:id="lblCount" layoutX="27.0" layoutY="16.0" prefHeight="17.0" prefWidth="50.0" text="5" textAlignment="RIGHT" />
+                  <Button layoutX="504.0" layoutY="11.0" mnemonicParsing="false" onAction="#updateDistancesGraph" text="Show" AnchorPane.rightAnchor="20.0" />
+                  <Slider fx:id="sliderCountStimuli" layoutX="81.6" layoutY="17.0" max="1000.0" min="1.0" prefHeight="14.0" prefWidth="425.0" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="90.0" />
+                  <Label fx:id="lblCount" layoutX="27.0" layoutY="16.0" prefHeight="17.0" prefWidth="50.0" text="1" textAlignment="RIGHT" />
                </children></AnchorPane>
       </content>
     </TitledPane>
