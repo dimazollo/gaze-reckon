@@ -30,7 +30,6 @@ public class ViewOfData {
     private Label lblCount;
     @FXML
     private Slider sliderCountStimuli;
-    //TODO Иван - разобраться с неиспольуземыми полями
     @FXML
     private TextField countStimuli;
     @FXML
@@ -44,13 +43,13 @@ public class ViewOfData {
     @FXML
     private void initialize() {
         initListeners();
-        //TODO Иван - Здесь единожды выполнять всё что можно при инициализации модуля с графиками. (например названия задавать)
     }
 
 
     public void updateDistancesGraph() {
-        //TODO Иван - сделать чтобы подсчёт расстояний происходил только 1 раз, а не после каждого обновления слайдера.
-        distances = computeDistances(Message.DELTA_AVERAGE);
+        if(distances==null){
+            distances = computeDistances(Message.DELTA_AVERAGE);
+        }
         lineChart.getData().clear();
         sliderCountStimuli.setMin(1);
         sliderCountStimuli.setMax(distances.size());
@@ -97,7 +96,7 @@ public class ViewOfData {
     private void initListeners() {
         sliderCountStimuli.valueProperty().addListener((observable, oldValue, newValue) -> {
             lblCount.setText(String.valueOf(newValue.intValue()));
-            // Обновление графика при изменении положения слайдера (ваш кэп).
+            // Обновление графика при изменении положения слайдера (ваш Дмитрий).
             updateDistancesGraph();
         });
     }

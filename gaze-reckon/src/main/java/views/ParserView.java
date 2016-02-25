@@ -35,7 +35,7 @@ public class ParserView {
     private FDView fdView;
     private RootLayoutView rootLayoutView;
     @FXML
-    private TextField trackerFileAddress;
+    public TextField trackerFileAddress;
     @FXML
     private TextField testFileAddress;
     @FXML

@@ -3,10 +3,7 @@ package views;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import main.Main;
 import serializer.Serializer;
@@ -20,6 +17,8 @@ import java.io.IOException;
  */
 public class RootLayoutView {
     private final Property<Main> mainApp = new SimpleObjectProperty<>();
+    @FXML
+    private MenuItem btnShowCharts;
 
     @FXML
     private CheckMenuItem linearInterpolationFlag;
@@ -38,6 +37,7 @@ public class RootLayoutView {
     @FXML
     private CheckMenuItem useConfigFlag;
     private ViewOfData viewOfData;
+    private ParserView parserView;
     private Stage stageViewOfData;
 
     @FXML
@@ -135,7 +135,7 @@ public class RootLayoutView {
         this.mainApp.setValue(mainApp);
     }
 
-    public void actionLineChart() throws IOException {
+    public void actionShowCharts() throws IOException {
         viewOfData.updateDistancesGraph(); // Обновление графика с расстояниями перед открытием окошка с графиками.
         stageViewOfData.show();
     }
@@ -144,7 +144,23 @@ public class RootLayoutView {
         this.viewOfData = viewOfData;
     }
 
+    public void setParserView(ParserView parserView) {
+        this.parserView = parserView;
+    }
+
     public void setStage(Stage stage) {
         this.stageViewOfData = stage;
     }
+
+    public void updateEnableBtnShowCharts(){
+        if((parserView.getTrackerFileAddress()!="")&&(parserView.getTestFileAddress()!="")){
+            btnShowCharts.setVisible(true);
+        }
+    }
+   /* private void initListeners() {
+      //  parserView.trackerFileAddress.getProperties().addListener; //TODO Дим Сделай чтоб эта строка заработала и выполняла то что снизу
+
+            updateEnableBtnShowCharts();
+
+    }*/
 }

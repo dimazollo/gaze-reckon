@@ -139,6 +139,7 @@ public class Main extends Application {
             AnchorPane parserForm = loader.load();
             parserView = loader.getController();
             parserView.setMainApp(this);
+            rootLayoutView.setParserView(parserView);
             return parserForm;
         } catch (IOException e) {
             e.printStackTrace();
