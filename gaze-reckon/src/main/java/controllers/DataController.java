@@ -7,6 +7,7 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.CheckBox;
 import main.Main;
+import model.MappedData;
 import model.eyetracker.Message;
 import model.test.Stimulus;
 import views.FDView;
@@ -41,12 +42,12 @@ public class DataController implements Writable {
         return instance;
     }
 
-    //parseStimuli parses a set of strings from resulting file of Regina's test.
+    // parseStimuli parses a set of strings from resulting file of Regina's test.
     public ArrayList<Stimulus> parseStimuli(File testFile) throws ParseException, IOException, IndexOutOfBoundsException {
         ArrayList<Stimulus> stimuli = new ArrayList<>();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(testFile));
         String s = bufferedReader.readLine();
-        if (!s.matches("^\\D*$")) {//regex matches numbers(check if the string is a header)
+        if (!s.matches("^\\D*$")) {// Regex matches numbers (check if the string is a header).
             stimuli.add(new Stimulus(s));
         }
         while (bufferedReader.ready()) {
@@ -74,7 +75,7 @@ public class DataController implements Writable {
         return messages;
     }
 
-    //mapTrackersAndStimuli build a HashMap of tracker messages and related stimuli in compliance with their time
+    // mapTrackersAndStimuli builds a HashMap of tracker messages and related stimuli in compliance with their time.
     public static LinkedHashMap<Message, Stimulus> mapTrackersAndStimuli(ArrayList<Message> messages, ArrayList<Stimulus> stimuli) {
         Date stimulusStart = new Date();
         Date stimulusEnd = new Date();
@@ -104,6 +105,37 @@ public class DataController implements Writable {
 //            i++;
 //        }
         return mappedData;
+    }
+
+
+    //TODO-Dmitry - Возможно стоит перейти на такой вид представления данных вместо LinkedHashMap.
+    //TODO - Метод не тестировали.
+    public static ArrayList<MappedData> createMappedData(ArrayList<Message> messages, ArrayList<Stimulus> stimuli) {
+        Date stimulusStart = new Date();
+        Date stimulusEnd = new Date();
+        Date presentingTime = new Date();
+        if (stimuli.size() == 0) return null;
+        if (stimuli.size() == 1) {
+            presentingTime.setTime(stimuli.get(0).getTimestamp().getTime() + 5000);
+        } else {
+            presentingTime.setTime(stimuli.get(1).getTimestamp().getTime() - stimuli.get(0).getTimestamp().getTime());
+        }
+        int i = 0;
+        ArrayList<MappedData> mappedDataArrayList = new ArrayList<>();
+        for (Stimulus stimulus : stimuli) {
+            stimulusStart.setTime(stimulus.getTimestamp().getTime());
+            stimulusEnd.setTime(stimulusStart.getTime() + presentingTime.getTime());
+            while (messages.get(i).values.frame.timestamp.before(stimulusStart)) {
+                //mappedData.put(messages.get(i), null);  //write messages before the first stimulus have been demonstrated
+                i++;
+            }
+            ArrayList<Message> relatedMessages = new ArrayList<>();
+            while (messages.get(i).values.frame.timestamp.before(stimulusEnd)) {
+                relatedMessages.add(messages.get(i));
+            }
+            mappedDataArrayList.add(new MappedData(stimulus, relatedMessages));
+        }
+        return mappedDataArrayList;
     }
 
     // "write" aggregates all "write" methods and so outputs in file all selected fields of parsed tracker messages, information about
@@ -228,7 +260,7 @@ public class DataController implements Writable {
         return list;
     }
 
-    //stringsAggregate put together all messages (from tracker) and stimuli (from test) and computed deltas in single HashMap
+    // stringsAggregate puts together all messages (from tracker) and stimuli (from test) and computed deltas in single HashMap.
     private HashMap<String, String> stringsAggregate(Message msg, Stimulus stmls) {
         HashMap<String, String> row = msg.toStringHashMap(fieldSeparator);
         row.put(Message.DELTA_AVERAGE, msg.values.frame.avg.getDistance(stmls.getPosition()).toString());
@@ -241,7 +273,7 @@ public class DataController implements Writable {
         return row;
     }
 
-    //getDeltas return all "deltas" from single tracker message;
+    // getDeltas returns all "deltas" from single tracker message.
     private static HashMap<String, Double> getDeltas(Message msg, Stimulus stmls) {
         HashMap<String, Double> row = new HashMap<>();
         row.put(Message.DELTA_AVERAGE, msg.values.frame.avg.getDistance(stmls.getPosition()));

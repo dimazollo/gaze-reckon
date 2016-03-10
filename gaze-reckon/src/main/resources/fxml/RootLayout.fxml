@@ -9,6 +9,7 @@
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleWriteData" text="Write data" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleComputeErrors" text="Compute errors" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
                     </items>
