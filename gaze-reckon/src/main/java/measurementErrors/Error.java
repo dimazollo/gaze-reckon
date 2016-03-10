@@ -71,12 +71,14 @@ public final class Error {
             }
             if (!contains) stimuliSet.add(tmpStimulus);
         }
+        // Часть с рачётом отклонений.
         ArrayList<Double> deltasX;
         ArrayList<Double> deltasY;
         HashMap<Stimulus, Double[]> results = new HashMap<>();
         for (Stimulus currentStimulus : stimuliSet) {
             deltasX = new ArrayList<>();
             deltasY = new ArrayList<>();
+            // Одинаковыми считаются стимулы с одинаковыми координатами.
             for (Map.Entry<Message, Stimulus> entry : filteredMap.entrySet()) {
                 if (currentStimulus.getPosition().x == entry.getValue().getPosition().x && currentStimulus.getPosition().y == entry.getValue().getPosition().y) {
                     deltasX.add(entry.getValue().getPosition().x - entry.getKey().values.frame.raw.x);
@@ -92,6 +94,7 @@ public final class Error {
         return results;
     }
 
+    // Расчёт среднеквадратичного отклонения.
     private static Double standardDeviation(ArrayList<Double> deviations) {
         Double sum = 0.0;
         for (Double deviation : deviations) {
@@ -100,6 +103,7 @@ public final class Error {
         return Math.sqrt(sum/deviations.size());
     }
 
+    // Расчёт абсолютного отклонения.
     private static Double absoluteDeviation(ArrayList<Double> deviations) {
         Double sum = 0.0;
         for (Double deviation : deviations) {
