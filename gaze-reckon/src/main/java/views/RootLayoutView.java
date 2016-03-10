@@ -8,10 +8,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import main.Main;
 import measurementErrors.Error;
+import model.eyetracker.Message;
 import model.test.Stimulus;
 import serializer.Serializer;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -72,21 +74,23 @@ public class RootLayoutView {
     }
 
     @FXML
+    private void handleComputeErrors() {
+        DataRecovery.listwiseDeletion(mainApp.getValue().getMessages());
+        LinkedHashMap<Message, Stimulus> mappedData = DataController.mapTrackersAndStimuli(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
+        LinkedHashMap<Message, Stimulus> filteredMap = Error.filterStimulusMessageMap(mappedData);
+        HashMap<Stimulus, Double[]> deviations = Error.computeDeviationsForEach(filteredMap);
+        System.out.println("Stimulus x;Stimulus y;absolute deviation x;absolute deviation y;standard deviation x;standard deviation y");
+        for (Map.Entry<Stimulus, Double[]> entry : deviations.entrySet()) {
+            System.out.println(entry.getKey().getPosition().x + ";" + entry.getKey().getPosition().y + ";"+ Stimulus.dateFormat.format(entry.getKey().getTimestamp()) + ";" +
+                    entry.getValue()[0] + ";" + entry.getValue()[1] + ";" + entry.getValue()[2] + ";" + entry.getValue()[3]);
+        }
+    }
+
+    @FXML
     private void handleExit() {
         Serializer deserializer = new Serializer(mainApp.getValue());
         deserializer.store();
         System.exit(0);
-    }
-
-    @FXML
-    private void handleComputeErrors() {
-        DataRecovery.listwiseDeletion(mainApp.getValue().getMessages());
-        HashMap<Stimulus, Double[]> deviations = Error.computeDeviations(Error.filterStimulusMessageMap(DataController.mapTrackersAndStimuli(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli())));
-        System.out.println("Stimulus x;Stimulus y;absolute deviation x;absolute deviation y;standard deviation x;standard deviation y");
-        for (Map.Entry<Stimulus, Double[]> entry : deviations.entrySet()) {
-            System.out.println(entry.getKey().getPosition().x + ";" + entry.getKey().getPosition().y + ";" +
-            entry.getValue()[0] + ";" + entry.getValue()[1] + ";" + entry.getValue()[2] + ";" + entry.getValue()[3]);
-        }
     }
 
     public String getFieldSeparator() {

@@ -31,11 +31,11 @@ public class Stimulus {
         position = new Point(Double.parseDouble(strings[2]), Double.parseDouble(strings[3]));
     }
 
-    public Stimulus(double x, double y) {
+    public Stimulus(double x, double y, Date timestamp) {
         this.position = new Point();
         this.position.x = x;
         this.position.y = y;
-        this.timestamp = null;
+        this.timestamp = timestamp;
         this.timer = null;
     }
 
