@@ -47,15 +47,15 @@ public class Message {
     public String hasMissingData() {
         return values.frame.hasMissingData();
         //return values
-        //0 : both eyes data is defined;
-        //1 : left eye position is not defined;
-        //2 : right eye position is not defined;
-        //3 : both eyes position is not defined;
+        //null : both eyes data is defined;
+        //LEFT : left eye position is not defined;
+        //RIGHT : right eye position is not defined;
+        //BOTH : both eyes position is not defined;
     }
 
     public String toString() {
         return "category = " + category + System.lineSeparator() +
-                "requst = " + request + System.lineSeparator() +
+                "request = " + request + System.lineSeparator() +
                 "statuscode = " + statuscode + System.lineSeparator() +
                 "values (" + System.lineSeparator() +
                 values.toString() + System.lineSeparator() + ")" + System.lineSeparator();

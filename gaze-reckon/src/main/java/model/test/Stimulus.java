@@ -31,6 +31,14 @@ public class Stimulus {
         position = new Point(Double.parseDouble(strings[2]), Double.parseDouble(strings[3]));
     }
 
+    public Stimulus(double x, double y) {
+        this.position = new Point();
+        this.position.x = x;
+        this.position.y = y;
+        this.timestamp = null;
+        this.timer = null;
+    }
+
     public Date getTimestamp() {
         return timestamp;
     }
@@ -48,6 +56,27 @@ public class Stimulus {
             timestamp = "0";
         }
         return timestamp;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this)
+            return true;
+     /* obj ссылается на null */
+        if(obj == null)
+            return false;
+     /* Удостоверимся, что ссылки имеют тот же самый тип */
+        if(!(getClass() == obj.getClass()))
+            return false;
+        else
+        {
+            Stimulus tmp = (Stimulus) obj;
+            if(tmp.getPosition().x == this.position.x && tmp.getPosition().y == this.position.y &&
+                    tmp.getTimestamp() == this.timestamp)
+                return true;
+            else
+                return false;
+        }
     }
 
     public String toString() {

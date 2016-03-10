@@ -12,17 +12,17 @@ import java.util.ArrayList;
  */
 
 public final class DataRecovery {
-    //method of checking time field in the array of tracker messages and do all values unique
+    // Method of checking time field in the array of tracker messages and do all values unique.
     public static int correctRepetitive(ArrayList<Message> messages) {
         if (messages.size() < 2) return 0;
         int counter = 0;
         for (int i = 1; i < messages.size(); i++) {
             if (messages.get(i).values.frame.time ==
                     messages.get(i - 1).values.frame.time) {
-                messages.get(i).values.frame.time += 20; //make time value be unique
-                //here should be code that makes timestamp be unique too
+                messages.get(i).values.frame.time += 20; // Make time value be unique.
+                // Here should be code that makes timestamp be unique too.
                 counter++;
-                //System.out.println(counter + " " + trackers.get(i-1).values.frame.time);
+                // System.out.println(counter + " " + trackers.get(i-1).values.frame.time);
             }
         }
         return counter;
@@ -124,7 +124,7 @@ public final class DataRecovery {
 
     public static void listwiseDeletion(ArrayList<Message> messages) {
         for (int i = 0; i < messages.size(); i++) {
-            if (messages.get(i) != null) {
+            if (messages.get(i).hasMissingData() != null) {
                 messages.remove(i);
             }
         }
