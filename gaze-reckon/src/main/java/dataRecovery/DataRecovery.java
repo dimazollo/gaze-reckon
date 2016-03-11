@@ -12,15 +12,15 @@ import java.util.ArrayList;
  */
 
 public final class DataRecovery {
-    //method of checking time field in the array of tracker messages and do all values unique
+    // Method of checking time field in the array of tracker messages and do all values unique.
     public static int correctRepetitive(ArrayList<Message> messages) {
         if (messages.size() < 2) return 0;
         int counter = 0;
         for (int i = 1; i < messages.size(); i++) {
             if (messages.get(i).values.frame.time ==
                     messages.get(i - 1).values.frame.time) {
-                messages.get(i).values.frame.time += 20; //make time value be unique
-                //here should be code that makes timestamp be unique too
+                messages.get(i).values.frame.time += 20; // Make time value be unique.
+                //TODO-Dmitry: Here should be code that makes timestamp be unique too.
                 counter++;
                 //System.out.println(counter + " " + trackers.get(i-1).values.frame.time);
             }
@@ -31,7 +31,7 @@ public final class DataRecovery {
     private static ArrayList<MissingValues> findMisses(ArrayList<Message> messages) {
         MissingValues series;
         ArrayList<MissingValues> allMissingSeries = new ArrayList<>();
-        //searching for a series of missing values
+        // Searching for a series of missing values.
         int i = 0;
         while (i < messages.size()) {
             series = new MissingValues();
@@ -56,7 +56,7 @@ public final class DataRecovery {
         return allMissingSeries;
     }
 
-    // here are bunch of data recovery approaches. they should be coded separately
+    // Here are bunch of data recovery approaches. they should be coded separately.
     private static void interpolate(ArrayList<Message> messages, MissingValues series) {
         if (series.size() < 4 && series.size() > 0) {
             if (series.get(0).getKey() != 0 && series.get(series.size() - 1).getKey() != 0) {
@@ -64,7 +64,7 @@ public final class DataRecovery {
                 Message last = messages.get(series.get(series.size() - 1).getKey() + 1);
                 for (int j = 0; j < series.size(); j++) {
                     Message current = messages.get(series.get(j).getKey());
-                    //to reduce amount of code it is better to redefine arithmetical operators in Frame
+                    // To reduce amount of code it is better to redefine arithmetical operators in Frame.
                     current.values.frame.raw.x = (j + 1) * (last.values.frame.raw.x
                             - first.values.frame.raw.x) / (series.size() + 1)
                             + first.values.frame.raw.x;
@@ -124,7 +124,7 @@ public final class DataRecovery {
 
     public static void listwiseDeletion(ArrayList<Message> messages) {
         for (int i = 0; i < messages.size(); i++) {
-            if (messages.get(i) != null) {
+            if (messages.get(i).hasMissingData() != null) {
                 messages.remove(i);
             }
         }
