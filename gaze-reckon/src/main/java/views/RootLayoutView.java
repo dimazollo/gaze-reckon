@@ -8,12 +8,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import main.Main;
 import measurementErrors.Error;
-import model.eyetracker.Message;
+import model.MappedDataItem;
 import model.test.Stimulus;
 import serializer.Serializer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -76,13 +76,19 @@ public class RootLayoutView {
     @FXML
     private void handleComputeErrors() {
         DataRecovery.listwiseDeletion(mainApp.getValue().getMessages());
-        LinkedHashMap<Message, Stimulus> mappedData = DataController.mapTrackersAndStimuli(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
-        LinkedHashMap<Message, Stimulus> filteredMap = Error.filterStimulusMessageMap(mappedData);
-        HashMap<Stimulus, Double[]> deviations = Error.computeDeviationsForEach(filteredMap);
-        System.out.println("Stimulus x;Stimulus y;absolute deviation x;absolute deviation y;standard deviation x;standard deviation y");
-        for (Map.Entry<Stimulus, Double[]> entry : deviations.entrySet()) {
-            System.out.println(entry.getKey().getPosition().x + ";" + entry.getKey().getPosition().y + ";"+ Stimulus.dateFormat.format(entry.getKey().getTimestamp()) + ";" +
-                    entry.getValue()[0] + ";" + entry.getValue()[1] + ";" + entry.getValue()[2] + ";" + entry.getValue()[3]);
+//        LinkedHashMap<Message, Stimulus> mappedData = DataController.mapTrackersAndStimuli(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
+//        LinkedHashMap<Message, Stimulus> filteredMap = Error.filterStimulusMessageMap(mappedData);
+        ArrayList<MappedDataItem> mappedDataList = DataController.createMappedData(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
+//        HashMap<Stimulus, Double[]> deviations = Error.computeDeviationsForEach(filteredMap);
+        HashMap<Stimulus, Double[]> stats = Error.computeDeviations(mappedDataList);
+//        System.out.println("Stimulus x;Stimulus y;absolute deviation x;absolute deviation y;standard deviation x;standard deviation y");
+        System.out.println("Stimulus x;Stimulus y;absolute deviation x;absolute deviation y;" +
+                "standard deviation x;standard deviation y;" +
+                "min abs deviation x;max abs deviation x;min abs deviation y; max abs deviation y;");
+        for (Map.Entry<Stimulus, Double[]> entry : stats.entrySet()) {
+            System.out.println(entry.getKey().getPosition().x + ";" + entry.getKey().getPosition().y + ";" +
+                    entry.getValue()[0] + ";" + entry.getValue()[1] + ";" + entry.getValue()[2] + ";" + entry.getValue()[3] + ";" +
+                    entry.getValue()[4] + ";" + entry.getValue()[5] + ";" + entry.getValue()[6] + ";" + entry.getValue()[7]);
         }
     }
 

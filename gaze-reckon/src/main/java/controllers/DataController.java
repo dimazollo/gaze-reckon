@@ -7,7 +7,7 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.CheckBox;
 import main.Main;
-import model.MappedData;
+import model.MappedDataItem;
 import model.eyetracker.Message;
 import model.test.Stimulus;
 import views.FDView;
@@ -110,7 +110,7 @@ public class DataController implements Writable {
 
     //TODO-Dmitry - Возможно стоит перейти на такой вид представления данных вместо LinkedHashMap.
     //TODO - Метод не тестировали.
-    public static ArrayList<MappedData> createMappedData(ArrayList<Message> messages, ArrayList<Stimulus> stimuli) {
+    public static ArrayList<MappedDataItem> createMappedData(ArrayList<Message> messages, ArrayList<Stimulus> stimuli) {
         Date stimulusStart = new Date();
         Date stimulusEnd = new Date();
         Date presentingTime = new Date();
@@ -121,7 +121,7 @@ public class DataController implements Writable {
             presentingTime.setTime(stimuli.get(1).getTimestamp().getTime() - stimuli.get(0).getTimestamp().getTime());
         }
         int i = 0;
-        ArrayList<MappedData> mappedDataArrayList = new ArrayList<>();
+        ArrayList<MappedDataItem> mappedDataArrayList = new ArrayList<>();
         for (Stimulus stimulus : stimuli) {
             stimulusStart.setTime(stimulus.getTimestamp().getTime());
             stimulusEnd.setTime(stimulusStart.getTime() + presentingTime.getTime());
@@ -132,8 +132,9 @@ public class DataController implements Writable {
             ArrayList<Message> relatedMessages = new ArrayList<>();
             while (messages.get(i).values.frame.timestamp.before(stimulusEnd)) {
                 relatedMessages.add(messages.get(i));
+                i++;
             }
-            mappedDataArrayList.add(new MappedData(stimulus, relatedMessages));
+            mappedDataArrayList.add(new MappedDataItem(stimulus, relatedMessages));
         }
         return mappedDataArrayList;
     }

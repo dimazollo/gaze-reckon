@@ -34,4 +34,9 @@ public class Point {
     public String getDescription(String fieldSeparator) {
         return "" + x + fieldSeparator + y;
     }
+
+    @Override
+    public String toString() {
+        return "" + x + ";" + y;
+    }
 }

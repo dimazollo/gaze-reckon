@@ -1,6 +1,6 @@
 package measurementErrors;
 
-import model.MappedData;
+import model.MappedDataItem;
 import model.eyetracker.Message;
 import model.test.Stimulus;
 
@@ -15,17 +15,44 @@ public final class Error {
     private final static String SACCADE = "saccade";
     private final static String FIXATION = "fixation";
 
-    static double computeStandardDeviation(ArrayList<MappedData> mappedDataArrayList) {
-        HashMap<Message, Stimulus> filteredMap = new LinkedHashMap<>();
-        for (MappedData mappedData : mappedDataArrayList) {
-            ArrayList<Message> messages = mappedData.getMessages();
+    // Вариант под класс MappedData
+    static ArrayList<MappedDataItem> filterMappedData(ArrayList<MappedDataItem> mappedDataArrayList) {
+        ArrayList<MappedDataItem> filteredMappedDataList = new ArrayList<>();
+        for (MappedDataItem mappedDataItem : mappedDataArrayList) {
+            String status = LAG_PHASE;
+            ArrayList<Message> messages = mappedDataItem.getMessages();
+            ArrayList<Message> filteredMessages = new ArrayList<>();
+            MappedDataItem filteredMappedDataItem;
             for (int i = 0; i < messages.size(); i++) {
-                //TODO-Dmitry Выделение периода фиксации, удаляя саккады и латентный период.
+                // Выделение периода фиксации, удаляя саккады и латентный период.
+                switch (status) {
+                    case LAG_PHASE:
+                        if (messages.get(i).values.frame.fix == false) {
+                            status = SACCADE;
+                        }
+                        break;
+
+                    case SACCADE:
+                        if (messages.get(i).values.frame.fix == true) {
+                            status = FIXATION;
+                            filteredMessages.add(messages.get(i));
+                        }
+                        break;
+
+                    case FIXATION:
+                        if (messages.get(i).values.frame.fix == true) {  // Добавляем только точки, в которых была фиксация.
+                            filteredMessages.add(messages.get(i));
+                        }
+                        break;
+                }
             }
+            filteredMappedDataItem = new MappedDataItem(mappedDataItem.getStimulus(), filteredMessages);
+            filteredMappedDataList.add(filteredMappedDataItem);
         }
-        return Double.NaN;
+        return filteredMappedDataList;
     }
 
+    // Вариант под LinkedHashMap
     public static LinkedHashMap<Message, Stimulus> filterStimulusMessageMap(HashMap<Message, Stimulus> messageStimulusMap) {
         LinkedHashMap<Message, Stimulus> filteredMap = new LinkedHashMap<>();
         String status = LAG_PHASE;
@@ -60,6 +87,77 @@ public final class Error {
         return filteredMap;
     }
 
+    // На базе MappedData
+    public static HashMap<Stimulus, Double[]> computeDeviations(List<MappedDataItem> mappedDataList) {
+        List<Stimulus> stimuli = new LinkedList<>();
+        boolean contains;
+        for (MappedDataItem mappedDataItem : mappedDataList) { // Пробегаем по всем стимулам и добавляем только одинаковые.
+            Stimulus tmpStimulus = new Stimulus(mappedDataItem.getStimulus().getPosition().x, mappedDataItem.getStimulus().getPosition().y, null);
+            contains = false;
+            for (Stimulus s : stimuli) {
+                if (s.equals(tmpStimulus)) contains = true;
+            }
+            if (!contains) stimuli.add(tmpStimulus);
+        }
+
+        // Отфильтровавыние стимулов, на которых алгоритм выделения фиксации среди саккад и латентного периода не нашел этой самой фиксации.
+        List<MappedDataItem> filteredMappedData = new LinkedList<>();
+        for (MappedDataItem mappedDataItem : mappedDataList) {
+            if(mappedDataItem.computeStatistics() != null) {
+                filteredMappedData.add(mappedDataItem);
+            }
+        }
+
+        // Фильрация "некомплектных" стимулов.
+//        for (MappedDataItem mappedDataItem : mappedDataList) {
+//            if(!mappedDataItem.hasMissingData()) {
+//                mappedDataItem.computeStatistics();
+//                filteredMappedData.add(mappedDataItem);
+//            }
+//        }
+
+        List<Double> deltasX;
+        List<Double> deltasY;
+        Double minDeltaX;
+        Double maxDeltaX;
+        Double minDeltaY;
+        Double maxDeltaY;
+        HashMap<Stimulus, Double[]> results = new HashMap<>();
+        for (Stimulus currentStimulus : stimuli) {
+            deltasX = new LinkedList<>();
+            deltasY = new LinkedList<>();
+            minDeltaX = null;
+            maxDeltaX = null;
+            minDeltaY = null;
+            maxDeltaY = null;
+            for (MappedDataItem mappedDataItem : filteredMappedData) {
+                if (currentStimulus.getPosition().x == mappedDataItem.getStimulus().getPosition().x &&
+                        currentStimulus.getPosition().y == mappedDataItem.getStimulus().getPosition().y) {
+                    if (minDeltaX == null || maxDeltaX == null || minDeltaY == null || maxDeltaY == null) {
+                        minDeltaX = new Double(mappedDataItem.getMinDeltaX());
+                        maxDeltaX = new Double(mappedDataItem.getMaxDeltaX());
+                        minDeltaY = new Double(mappedDataItem.getMinDeltaY());
+                        maxDeltaY = new Double(mappedDataItem.getMaxDeltaY());
+                    } else {
+                        if (Math.abs(minDeltaX) > Math.abs(mappedDataItem.getMinDeltaX())) minDeltaX = mappedDataItem.getMinDeltaX();
+                        if (Math.abs(maxDeltaX) < Math.abs(mappedDataItem.getMaxDeltaX())) maxDeltaX = mappedDataItem.getMaxDeltaX();
+                        if (Math.abs(minDeltaY) > Math.abs(mappedDataItem.getMinDeltaY())) minDeltaY = mappedDataItem.getMinDeltaY();
+                        if (Math.abs(maxDeltaY) < Math.abs(mappedDataItem.getMaxDeltaY())) maxDeltaY = mappedDataItem.getMaxDeltaY();
+                    }
+                    deltasX.add(mappedDataItem.getMeanX() - currentStimulus.getPosition().x);
+                    deltasY.add(mappedDataItem.getMeanY() - currentStimulus.getPosition().y);
+                }
+                Double absDevX = absoluteDeviation(deltasX);
+                Double absDevY = absoluteDeviation(deltasY);
+                Double stDevX = standardDeviation(deltasX);
+                Double stDevY = standardDeviation(deltasY);
+                results.put(currentStimulus, new Double[]{absDevX, absDevY, stDevX, stDevY, minDeltaX, maxDeltaX, minDeltaY, maxDeltaY});
+            }
+        }
+        return results;
+    }
+
+    // На базе смапленных хэшкарт.
     public static HashMap<Stimulus, Double[]> computeDeviations(LinkedHashMap<Message, Stimulus> filteredMap) {
         HashSet<Stimulus> stimuliSet = new HashSet<>();
         boolean contains;
@@ -94,11 +192,12 @@ public final class Error {
         return results;
     }
 
-
-    public static HashMap<Stimulus, Double[]> computeDeviationsForEach(LinkedHashMap<Message, Stimulus> filteredMap) {
+    // Отличается от предыдущего тем, что стимулы считаются разными, если предъявлены в одинаковых координатах, но в разное время.
+    public static HashMap<Stimulus, Double[]> computeDeviationsForEach
+    (LinkedHashMap<Message, Stimulus> filteredMap) {
         HashSet<Stimulus> stimuliSet = new HashSet<>();
         boolean contains;
-        for (Stimulus stimulus : filteredMap.values()) { // Пробегаем по всем стимулам и добавляем только одинаковые.
+        for (Stimulus stimulus : filteredMap.values()) { // Пробегаем по всем стимулам и добавляем каждый предъявленный стимул.
             Stimulus tmpStimulus = new Stimulus(stimulus.getPosition().x, stimulus.getPosition().y, stimulus.getTimestamp());
             contains = false;
             for (Stimulus s : stimuliSet) {
@@ -128,21 +227,23 @@ public final class Error {
         }
         return results;
     }
+
     // Расчёт среднеквадратичного отклонения.
-    private static Double standardDeviation(ArrayList<Double> deviations) {
+
+    public static Double standardDeviation(List<Double> deviations) {
         Double sum = 0.0;
         for (Double deviation : deviations) {
             sum += Math.pow(deviation, 2.0);
         }
-        return Math.sqrt(sum/deviations.size());
+        return Math.sqrt(sum / deviations.size());
     }
 
     // Расчёт абсолютного отклонения.
-    private static Double absoluteDeviation(ArrayList<Double> deviations) {
+    public static Double absoluteDeviation(List<Double> deviations) {
         Double sum = 0.0;
         for (Double deviation : deviations) {
             sum += deviation;
         }
-        return sum/deviations.size();
+        return sum / deviations.size();
     }
 }
