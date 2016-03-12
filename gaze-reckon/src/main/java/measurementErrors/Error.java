@@ -23,25 +23,25 @@ public final class Error {
             ArrayList<Message> messages = mappedDataItem.getMessages();
             ArrayList<Message> filteredMessages = new ArrayList<>();
             MappedDataItem filteredMappedDataItem;
-            for (int i = 0; i < messages.size(); i++) {
+            for (Message message : messages) {
                 // Выделение периода фиксации, удаляя саккады и латентный период.
                 switch (status) {
                     case LAG_PHASE:
-                        if (messages.get(i).values.frame.fix == false) {
+                        if (!message.values.frame.fix) {
                             status = SACCADE;
                         }
                         break;
 
                     case SACCADE:
-                        if (messages.get(i).values.frame.fix == true) {
+                        if (message.values.frame.fix) {
                             status = FIXATION;
-                            filteredMessages.add(messages.get(i));
+                            filteredMessages.add(message);
                         }
                         break;
 
                     case FIXATION:
-                        if (messages.get(i).values.frame.fix == true) {  // Добавляем только точки, в которых была фиксация.
-                            filteredMessages.add(messages.get(i));
+                        if (message.values.frame.fix) {  // Добавляем только точки, в которых была фиксация.
+                            filteredMessages.add(message);
                         }
                         break;
                 }
@@ -60,13 +60,13 @@ public final class Error {
         for (Map.Entry<Message, Stimulus> entry : messageStimulusMap.entrySet()) {
             switch (status) {
                 case LAG_PHASE:
-                    if (entry.getKey().values.frame.fix == false) {
+                    if (!entry.getKey().values.frame.fix) {
                         status = SACCADE;
                     }
                     break;
 
                 case SACCADE:
-                    if (entry.getKey().values.frame.fix == true) {
+                    if (entry.getKey().values.frame.fix) {
                         status = FIXATION;
                         filteredMap.put(entry.getKey(), entry.getValue());
                     }
@@ -74,7 +74,7 @@ public final class Error {
 
                 case FIXATION:
                     if (entry.getValue().equals(currentStimulus)) {     // Если текущий стимул не равен предыдущему, то начало латентного периода.
-                        if (entry.getKey().values.frame.fix == true) {  // Добавляем только точки, в которых была фиксация.
+                        if (entry.getKey().values.frame.fix) {  // Добавляем только точки, в которых была фиксация.
                             filteredMap.put(entry.getKey(), entry.getValue());
                         }
                     } else {
@@ -133,11 +133,11 @@ public final class Error {
             for (MappedDataItem mappedDataItem : filteredMappedData) {
                 if (currentStimulus.getPosition().x == mappedDataItem.getStimulus().getPosition().x &&
                         currentStimulus.getPosition().y == mappedDataItem.getStimulus().getPosition().y) {
-                    if (minDeltaX == null || maxDeltaX == null || minDeltaY == null || maxDeltaY == null) {
-                        minDeltaX = new Double(mappedDataItem.getMinDeltaX());
-                        maxDeltaX = new Double(mappedDataItem.getMaxDeltaX());
-                        minDeltaY = new Double(mappedDataItem.getMinDeltaY());
-                        maxDeltaY = new Double(mappedDataItem.getMaxDeltaY());
+                    if (minDeltaX == null || maxDeltaX == null || minDeltaY == null || maxDeltaY == null) { // Redundant clause. Can be simplified.
+                        minDeltaX = mappedDataItem.getMinDeltaX();
+                        maxDeltaX = mappedDataItem.getMaxDeltaX();
+                        minDeltaY = mappedDataItem.getMinDeltaY();
+                        maxDeltaY = mappedDataItem.getMaxDeltaY();
                     } else {
                         if (Math.abs(minDeltaX) > Math.abs(mappedDataItem.getMinDeltaX())) minDeltaX = mappedDataItem.getMinDeltaX();
                         if (Math.abs(maxDeltaX) < Math.abs(mappedDataItem.getMaxDeltaX())) maxDeltaX = mappedDataItem.getMaxDeltaX();
