@@ -102,19 +102,19 @@ public final class Error {
 
         // Отфильтровавыние стимулов, на которых алгоритм выделения фиксации среди саккад и латентного периода не нашел этой самой фиксации.
         List<MappedDataItem> filteredMappedData = new LinkedList<>();
-        for (MappedDataItem mappedDataItem : mappedDataList) {
-            if(mappedDataItem.computeStatistics() != null) {
-                filteredMappedData.add(mappedDataItem);
-            }
-        }
-
-        // Фильрация "некомплектных" стимулов.
 //        for (MappedDataItem mappedDataItem : mappedDataList) {
-//            if(!mappedDataItem.hasMissingData()) {
-//                mappedDataItem.computeStatistics();
+//            if(mappedDataItem.computeStatistics() != null) {
 //                filteredMappedData.add(mappedDataItem);
 //            }
 //        }
+
+        // Фильрация "некомплектных" стимулов.
+        for (MappedDataItem mappedDataItem : mappedDataList) {
+            if(!mappedDataItem.hasMissingData()) {
+                mappedDataItem.computeStatistics();
+                filteredMappedData.add(mappedDataItem);
+            }
+        }
 
         List<Double> deltasX;
         List<Double> deltasY;
