@@ -53,7 +53,7 @@ public class RootLayoutView {
         alert.setHeaderText("Gaze Reckon");
         alert.setContentText("Application for processing data files\n" +
                 "received from \"The Eye Tribe\" eye-tracker.\n\n" +
-                "Dmitry Volovod, Mikhail Turicyn\n" +
+                "Dmitry Volovod, Ivan Gerasimchuk, Mikhail Turicyn\n" +
                 "INPE NRNU MEPHI, 2015");
         alert.showAndWait();
     }
