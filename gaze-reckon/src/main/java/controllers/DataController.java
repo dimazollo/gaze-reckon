@@ -133,6 +133,7 @@ public class DataController implements Writable {
                 s = s.concat(entry.getKey() + " y" + fieldSeparator);
             }
         }
+        s = s.substring(0, s.length() - 1); // Костыль для отбрасывания лишнего разделителя в конце строки.
         s = s.concat(System.lineSeparator());
         bufferedWriter.write(s);
         if (testFile == null) {
@@ -162,6 +163,7 @@ public class DataController implements Writable {
             for (String key : firedFlags.keySet()) {
                 s = s.concat(strings.get(key) + fieldSeparator);
             }
+            s = s.substring(0, s.length() - 1); // Костыль для отбрасывания лишнего разделителя в конце строки.
             s = s.concat(System.lineSeparator());
             bufferedWriter.write(s);
             counter++;
@@ -179,6 +181,7 @@ public class DataController implements Writable {
                 for (String key : firedFlags.keySet()) {
                     s = s.concat(row.get(key) + fieldSeparator);
                 }
+                s = s.substring(0, s.length() - 1); // Костыль для отбрасывания лишнего разделителя в конце строки.
                 s = s.concat(System.lineSeparator());
                 bufferedWriter.write(s);
                 counter++;
@@ -203,6 +206,7 @@ public class DataController implements Writable {
                 for (String key : firedFlags.keySet()) {
                     s = s.concat(row.get(key) + fieldSeparator);
                 }
+                s = s.substring(0, s.length() - 1); // Костыль для отбрасывания лишнего разделителя в конце строки.
                 s = s.concat(System.lineSeparator());
                 bufferedWriter.write(s);
                 counter++;
@@ -221,7 +225,7 @@ public class DataController implements Writable {
             for (int i = 0; i < idtList.size(); i++) {
                 HashMap<String, Boolean> fixSet = new HashMap<>();
                 fixSet.put(FDView.IDT, idtList.get(i));
-                System.out.println(fixSet);
+//                System.out.println(fixSet);
                 list.add(fixSet);
             }
         }
