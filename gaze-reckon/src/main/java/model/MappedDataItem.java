@@ -78,13 +78,13 @@ public class MappedDataItem {
                     }
                     break;
                 case 1: // Саккада.
-                    if (messages.get(i).values.frame.fix == true) {
+                    if (messages.get(i).values.frame.fix == true && messages.get(i).values.frame.raw.getDistance(stimulus.getPosition()) < 400) {
                         status = 2;
                         filteredMessages.add(messages.get(i));
                     }
                     break;
                 case 2: // Фиксация.
-                    if (messages.get(i).values.frame.fix == true) {
+                    if (messages.get(i).values.frame.fix == true && messages.get(i).values.frame.raw.getDistance(stimulus.getPosition()) < 400) {
                         filteredMessages.add(messages.get(i));
                     }
                     break;
