@@ -8,8 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Mapped item of experimental data from eye-tracker and a visual stimulus provided by stimulus visualiser.
+ *
  * @Author Dmitry Volovod, Mikhail Turicyn
  * created on 10.03.2016
+ *
  */
 public class MappedDataItem {
     private double meanX;
@@ -23,46 +26,6 @@ public class MappedDataItem {
 
     public MappedDataItem(Stimulus stimulus, ArrayList<Message> messages) {
         this.stimulus = stimulus;
-        this.messages = messages;
-    }
-
-    public double getMinDeltaX() {
-        return minDeltaX;
-    }
-
-    public double getMaxDeltaX() {
-        return maxDeltaX;
-    }
-
-    public double getMinDeltaY() {
-        return minDeltaY;
-    }
-
-    public double getMaxDeltaY() {
-        return maxDeltaY;
-    }
-
-    public double getMeanX() {
-        return meanX;
-    }
-
-    public double getMeanY() {
-        return meanY;
-    }
-
-    public Stimulus getStimulus() {
-        return stimulus;
-    }
-
-    public void setStimulus(Stimulus stimulus) {
-        this.stimulus = stimulus;
-    }
-
-    public ArrayList<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
     }
 
@@ -119,10 +82,10 @@ public class MappedDataItem {
             deltaY = filteredMessages.get(i).values.frame.raw.y - stimulus.getPosition().y;
             meanY += filteredMessages.get(i).values.frame.raw.y;
             deltasY.add(deltaY);
-            if (Math.abs(minDeltaX) > Math.abs(deltaX)) minDeltaX = deltaX;
-            if (Math.abs(maxDeltaX) < Math.abs(deltaX)) maxDeltaX = deltaX;
-            if (Math.abs(minDeltaY) > Math.abs(deltaY)) minDeltaY = deltaY;
-            if (Math.abs(maxDeltaY) < Math.abs(deltaY)) maxDeltaY = deltaY;
+            if (minDeltaX > deltaX) minDeltaX = deltaX;
+            if (maxDeltaX < deltaX) maxDeltaX = deltaX;
+            if (minDeltaY > deltaY) minDeltaY = deltaY;
+            if (maxDeltaY < deltaY) maxDeltaY = deltaY;
         }
         meanX /= filteredMessages.size();
         meanY /= filteredMessages.size();
@@ -134,7 +97,6 @@ public class MappedDataItem {
         for (Message message : messages) {
             if (message.hasMissingData() != null) {
                 hasMissingData = true;
-
             }
         }
         return hasMissingData;
@@ -144,5 +106,45 @@ public class MappedDataItem {
     public String toString() {
         return "stimulus: " + stimulus.toString() + System.lineSeparator()
                 + "messages:" + messages.toString();
+    }
+
+    public double getMinDeltaX() {
+        return minDeltaX;
+    }
+
+    public double getMaxDeltaX() {
+        return maxDeltaX;
+    }
+
+    public double getMinDeltaY() {
+        return minDeltaY;
+    }
+
+    public double getMaxDeltaY() {
+        return maxDeltaY;
+    }
+
+    public double getMeanX() {
+        return meanX;
+    }
+
+    public double getMeanY() {
+        return meanY;
+    }
+
+    public Stimulus getStimulus() {
+        return stimulus;
+    }
+
+    public void setStimulus(Stimulus stimulus) {
+        this.stimulus = stimulus;
+    }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
     }
 }
