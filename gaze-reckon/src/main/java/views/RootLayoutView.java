@@ -7,10 +7,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import main.Main;
-import measurementErrors.Error;
 import model.MappedDataItem;
 import model.test.Stimulus;
 import serializer.Serializer;
+import statistics.Error;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,6 +90,32 @@ public class RootLayoutView {
                     entry.getValue()[0] + ";" + entry.getValue()[1] + ";" + entry.getValue()[2] + ";" + entry.getValue()[3] + ";" +
                     entry.getValue()[4] + ";" + entry.getValue()[5] + ";" + entry.getValue()[6] + ";" + entry.getValue()[7]);
         }
+    }
+
+    @FXML
+    private void handleNormalityTest() {
+        DataRecovery.listwiseDeletion(mainApp.getValue().getMessages());
+        ArrayList<MappedDataItem> mappedDataList = DataController.createMappedData(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
+        HashMap<Stimulus, Boolean[]> stats = Error.normalityTest(mappedDataList);
+        for (Map.Entry<Stimulus, Boolean[]> entry : stats.entrySet()) {
+            System.out.println(entry.getKey().getPosition().x + ";" + entry.getKey().getPosition().y + ";" +
+                    entry.getValue()[0] + ";" + entry.getValue()[1]);
+        }
+//        HashMap<Stimulus, Boolean> stats = Error.normalityTestForDeviations(mappedDataList);
+//        for (Map.Entry<Stimulus, Boolean> entry : stats.entrySet()) {
+//            System.out.println(entry.getKey().getPosition().x + ";" + entry.getKey().getPosition().y + ";" +
+//                    entry.getValue());
+//        }
+        int tr = 0, all = 0;
+        for (Boolean[] b : stats.values()) {
+            all += 2;
+            for (int i = 0; i < b.length; i++) {
+                if (b[i] != null) {
+                    if (b[i]) tr++;
+                }
+            }
+        }
+        System.out.println("tr = " + tr + "\tall = " + all + "\tk = " + ((float) tr / (float) all));
     }
 
     @FXML
