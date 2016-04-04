@@ -29,9 +29,10 @@ public class MappedDataItem {
         this.messages = messages;
     }
 
-    private List<Message> getFixationsMessages() {
+    public List<Message> getFixationsMessages() {
         List<Message> filteredMessages = new LinkedList<>();
         int status = 0;
+        final int THRESHOLD = 100;
         for (int i = 0; i < messages.size(); i++) {
             // Выделение периода фиксации, удаляя саккады и латентный период.
             switch (status) {
@@ -41,13 +42,13 @@ public class MappedDataItem {
                     }
                     break;
                 case 1: // Саккада.
-                    if (messages.get(i).values.frame.fix == true && messages.get(i).values.frame.raw.getDistance(stimulus.getPosition()) < 400) {
+                    if (messages.get(i).values.frame.fix == true && messages.get(i).values.frame.raw.getDistance(stimulus.getPosition()) < THRESHOLD) {
                         status = 2;
                         filteredMessages.add(messages.get(i));
                     }
                     break;
                 case 2: // Фиксация.
-                    if (messages.get(i).values.frame.fix == true && messages.get(i).values.frame.raw.getDistance(stimulus.getPosition()) < 400) {
+                    if (messages.get(i).values.frame.fix == true && messages.get(i).values.frame.raw.getDistance(stimulus.getPosition()) < THRESHOLD) {
                         filteredMessages.add(messages.get(i));
                     }
                     break;
@@ -65,12 +66,12 @@ public class MappedDataItem {
             System.out.println(stimulus);
             return null;
         }
-        List<Double> deltasX = new LinkedList<>();
-        List<Double> deltasY = new LinkedList<>();
+        //List<Double> deltasX = new LinkedList<>();
+        //List<Double> deltasY = new LinkedList<>();
         double deltaX;
         double deltaY;
-        meanX = 0;
-        meanY = 0;
+        meanX = 0;  // Среднее арифметическое по X
+        meanY = 0;  // Среднее арифметическое по Y
         minDeltaX = filteredMessages.get(0).values.frame.raw.x - stimulus.getPosition().x;
         maxDeltaX = filteredMessages.get(0).values.frame.raw.x - stimulus.getPosition().x;
         minDeltaY = filteredMessages.get(0).values.frame.raw.y - stimulus.getPosition().y;
@@ -78,10 +79,10 @@ public class MappedDataItem {
         for (int i = 0; i < filteredMessages.size(); i++) {
             deltaX = filteredMessages.get(i).values.frame.raw.x - stimulus.getPosition().x;
             meanX += filteredMessages.get(i).values.frame.raw.x;
-            deltasX.add(deltaX);
+            //deltasX.add(deltaX);
             deltaY = filteredMessages.get(i).values.frame.raw.y - stimulus.getPosition().y;
             meanY += filteredMessages.get(i).values.frame.raw.y;
-            deltasY.add(deltaY);
+            //deltasY.add(deltaY);
             if (minDeltaX > deltaX) minDeltaX = deltaX;
             if (maxDeltaX < deltaX) maxDeltaX = deltaX;
             if (minDeltaY > deltaY) minDeltaY = deltaY;

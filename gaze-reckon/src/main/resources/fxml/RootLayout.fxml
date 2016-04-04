@@ -10,6 +10,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleWriteData" text="Write data" />
                   <MenuItem mnemonicParsing="false" onAction="#handleComputeErrors" text="Compute errors" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleNormalityTest" text="Normality test" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
                     </items>

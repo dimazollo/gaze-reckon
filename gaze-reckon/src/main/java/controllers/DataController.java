@@ -109,7 +109,6 @@ public class DataController implements Writable {
 
 
     //TODO-Dmitry - Возможно стоит перейти на такой вид представления данных вместо LinkedHashMap.
-    //TODO - Метод не тестировали.
     public static ArrayList<MappedDataItem> createMappedData(ArrayList<Message> messages, ArrayList<Stimulus> stimuli) {
         Date stimulusStart = new Date();
         Date stimulusEnd = new Date();
