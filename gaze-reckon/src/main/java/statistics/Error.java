@@ -4,11 +4,10 @@ import model.MappedDataItem;
 import model.eyetracker.Message;
 import model.test.Stimulus;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+import org.apache.commons.math3.distribution.FDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
 import java.util.*;
-
-//import org.apache.commons.math3.distribution.NormalDistribution;
 
 /**
  * @Author Dmitry Volovod
@@ -159,6 +158,59 @@ public final class Error {
         return result;
     }
 
+    public static HashMap<Stimulus[], Boolean[]> fisherTest(List<MappedDataItem> mappedDataList) {
+        List<Stimulus> stimuli = getUniqueStimuli(mappedDataList);
+        List<MappedDataItem> filteredMappedData = new LinkedList<>();
+        for (MappedDataItem mappedDataItem : mappedDataList) {
+            if (mappedDataItem.computeStatistics() != null) {
+                filteredMappedData.add(mappedDataItem);
+            }
+        }
+        HashMap<Stimulus[], Boolean[]> results = new HashMap<>();
+        HashMap<Stimulus, ArrayList<Double>> xMap = new HashMap<>();
+        HashMap<Stimulus, ArrayList<Double>> yMap = new HashMap<>();
+        for (Stimulus currentStimulus : stimuli) {
+            List xList = new LinkedList<>();
+            List yList = new LinkedList<>();
+            for (MappedDataItem mappedDataItem : filteredMappedData) {
+                if (currentStimulus.getPosition().x == mappedDataItem.getStimulus().getPosition().x &&
+                        currentStimulus.getPosition().y == mappedDataItem.getStimulus().getPosition().y) {
+                    for (Message message : mappedDataItem.getFixationsMessages()) {
+                        xList.add(message.values.frame.raw.x);
+                        yList.add(message.values.frame.raw.y);
+                    }
+                }
+            }
+            xMap.put(currentStimulus, new ArrayList<>(xList));
+            yMap.put(currentStimulus, new ArrayList<>(yList));
+        }
+        ArrayList<Boolean[]> bArray = new ArrayList<>();
+        for (Map.Entry<Stimulus, ArrayList<Double>> entry1 : xMap.entrySet()) {
+            for (Map.Entry<Stimulus, ArrayList<Double>> entry2 : xMap.entrySet()) {
+                Boolean fTest = fisherTest(entry1.getValue(), entry2.getValue());
+                bArray.add(new Boolean[]{fTest, null});
+            }
+        }
+        Iterator<Boolean[]> iterator = bArray.iterator();
+        for (Map.Entry<Stimulus, ArrayList<Double>> entry1 : yMap.entrySet()) {
+            for (Map.Entry<Stimulus, ArrayList<Double>> entry2 : yMap.entrySet()) {
+                Boolean fTest = fisherTest(entry1.getValue(), entry2.getValue());
+                Boolean[] t = iterator.next();
+                t[1] = fTest;
+                results.put(new Stimulus[]{entry1.getKey(), entry2.getKey()}, t);
+            }
+        }
+        //Рабочий вариант для одной координаты
+//        for (Map.Entry<Stimulus, ArrayList<Double>> entry1 : xMap.entrySet()) {
+//            for (Map.Entry<Stimulus, ArrayList<Double>> entry2 : xMap.entrySet()) {
+//                Boolean fTest = fisherTest(entry1.getValue(), entry2.getValue());
+//                Boolean[] t = new Boolean[]{fTest, null};
+//                results.put(new Stimulus[]{entry1.getKey(), entry2.getKey()}, t);
+//            }
+//        }
+        return results;
+    }
+
     public static HashMap<Stimulus, Boolean> normalityTestForDeviations(List<MappedDataItem> mappedDataList) {
         List<Stimulus> stimuli = getUniqueStimuli(mappedDataList);
         List<MappedDataItem> filteredMappedData = new LinkedList<>();
@@ -168,8 +220,8 @@ public final class Error {
             }
         }
         HashMap<Stimulus, Boolean> results = new HashMap<>();
-        List<Double> dList, yList;
-        Double meanD, meanY;
+        List<Double> dList;
+        Double meanD;
         for (Stimulus currentStimulus : stimuli) {
             dList = new LinkedList<>();
             meanD = 0.0;
@@ -265,6 +317,36 @@ public final class Error {
         return results;
     }
 
+    private static Double mean(List<Double> sample) {
+        Double result = 0.0;
+        for (Double aDouble : sample) {
+            result += aDouble;
+        }
+        result /= sample.size();
+        return result;
+    }
+
+    private static Boolean fisherTest(List<Double> sample1, List<Double> sample2) {
+        Double m1 = mean(sample1);
+        List<Double> d1List = calculateDeviations(sample1, m1);
+        Double d1 = standardDeviation(d1List);
+        Double m2 = mean(sample2);
+        List<Double> d2List = calculateDeviations(sample2, m2);
+        Double d2 = standardDeviation(d2List);
+        Double t;
+        FDistribution fDistribution;
+        if (!sample1.isEmpty() && !sample2.isEmpty()) {
+            if (d1 > d2) {
+                fDistribution = new FDistribution(sample2.size() - 1, sample1.size() - 1);
+                t = Math.pow(d2, 2.0) / Math.pow(d1, 2.0);
+            } else {
+                fDistribution = new FDistribution(sample1.size() - 1, sample2.size() - 1);
+                t = Math.pow(d1, 2.0) / Math.pow(d2, 2.0);
+            }
+            return t < fDistribution.inverseCumulativeProbability(ALPHA);
+        } else return null;
+    }
+
     private static List<Double> calculateDeviations(List<Double> doubles, Double mean) {
         List<Double> result = new LinkedList<>();
         for (Double aDouble : doubles) {
@@ -292,7 +374,7 @@ public final class Error {
                 }
             }
             resultArray[i] = r_i;
-            if (i != numberOfIntervals.intValue() - 1){
+            if (i != numberOfIntervals.intValue() - 1) {
                 System.out.println(i + " : " + r_i);
             } else {
                 System.out.println(i + " : " + (r_i + 1));
