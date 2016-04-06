@@ -13,6 +13,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#handleComputeErrors" text="Compute errors"/>
                         <MenuItem mnemonicParsing="false" onAction="#handleNormalityTest" text="Normality test"/>
                         <MenuItem mnemonicParsing="false" onAction="#handleFTest" text="F-Test"/>
+                        <MenuItem mnemonicParsing="false" onAction="#handleCountMissesByStimulus" text="Count misses by stimulus"/>
                         <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit"/>
                     </items>

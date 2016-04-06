@@ -129,6 +129,15 @@ public class RootLayoutView {
         }
     }
 
+    public void handleCountMissesByStimulus() {
+        ArrayList<MappedDataItem> mappedDataItem = DataController.createMappedData(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
+        HashMap<Stimulus, Integer> stats = Error.countMissesByStimulus(mappedDataItem);
+        System.out.println("Misses by stimulus statistic:");
+        for (Map.Entry<Stimulus, Integer> entry : stats.entrySet()) {
+            System.out.println("" + entry.getKey() + entry.getValue());
+        }
+    }
+
     @FXML
     private void handleExit() {
         Serializer deserializer = new Serializer(mainApp.getValue());

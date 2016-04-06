@@ -21,6 +21,8 @@ public class Stimulus {
 
     public static final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss:S");
     private Date timestamp;
+    // Поле timer есть во входном файле, но оно не используется внутри программы.
+    // Т.е. удалять его нужно из программы предъявления стимулов, а потом уже здесь.
     private Double timer;
     private Point position;
 

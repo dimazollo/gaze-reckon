@@ -200,7 +200,7 @@ public final class Error {
                 results.put(new Stimulus[]{entry1.getKey(), entry2.getKey()}, t);
             }
         }
-        //Рабочий вариант для одной координаты
+        //100% Рабочий вариант для одной координаты
 //        for (Map.Entry<Stimulus, ArrayList<Double>> entry1 : xMap.entrySet()) {
 //            for (Map.Entry<Stimulus, ArrayList<Double>> entry2 : xMap.entrySet()) {
 //                Boolean fTest = fisherTest(entry1.getValue(), entry2.getValue());
@@ -384,6 +384,26 @@ public final class Error {
         return resultArray;
     }
 
+    // Подсчёт пропусков в местах предъявленных стимулов.
+    // Одинаковыми считаются стимулы, предъявленные в разное время, но в одинаковых координатах.
+    public static HashMap<Stimulus, Integer> countMissesByStimulus(List<MappedDataItem> mappedDataList) {
+        List<Stimulus> stimuli = getUniqueStimuli(mappedDataList);
+        HashMap<Stimulus, Integer> results = new HashMap<>();
+        for (Stimulus currentStimulus : stimuli) {
+            Integer counter = 0;
+            for (MappedDataItem mappedDataItem : mappedDataList) {
+                if (currentStimulus.getPosition().x == mappedDataItem.getStimulus().getPosition().x &&
+                        currentStimulus.getPosition().y == mappedDataItem.getStimulus().getPosition().y){
+                    for (Message message : mappedDataItem.getMessages()) {
+                        if (message.hasMissingData() != null) counter++;
+                    }
+                }
+            }
+            results.put(currentStimulus, counter);
+        }
+        return results;
+    }
+
 
     // На базе MappedData
     public static HashMap<Stimulus, Double[]> computeDeviations(List<MappedDataItem> mappedDataList) {
@@ -397,7 +417,7 @@ public final class Error {
             }
         }
 
-        // Фильрация "некомплектных" стимулов.
+        // Фильтрация "некомплектных" стимулов.
 //        for (MappedDataItem mappedDataItem : mappedDataList) {
 //            if(!mappedDataItem.hasMissingData()) {
 //                mappedDataItem.computeStatistics();
@@ -482,8 +502,7 @@ public final class Error {
     }
 
     // Отличается от предыдущего тем, что стимулы считаются разными, если предъявлены в одинаковых координатах, но в разное время.
-    public static HashMap<Stimulus, Double[]> computeDeviationsForEach
-    (LinkedHashMap<Message, Stimulus> filteredMap) {
+    public static HashMap<Stimulus, Double[]> computeDeviationsForEach(LinkedHashMap<Message, Stimulus> filteredMap) {
         HashSet<Stimulus> stimuliSet = new HashSet<>();
         boolean contains;
         for (Stimulus stimulus : filteredMap.values()) { // Пробегаем по всем стимулам и добавляем каждый предъявленный стимул.
