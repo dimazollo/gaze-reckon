@@ -5,6 +5,9 @@ import model.eyetracker.Frame;
 import model.eyetracker.Message;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author Dmitry Volovod
@@ -122,12 +125,20 @@ public final class DataRecovery {
         messages.forEach(DataRecovery::oneEyeMissRecovery);
     }
 
+    // TODO - Отказаться от этого варианта и перейти на использование второго.
+    @Deprecated
     public static void listwiseDeletion(ArrayList<Message> messages) {
         for (int i = 0; i < messages.size(); i++) {
             if (messages.get(i).hasMissingData() != null) {
                 messages.remove(i);
+                i--;
             }
         }
+    }
+
+    public static ArrayList<Message> listwiseDeletion2(ArrayList<Message> messages) {
+        List<Message> result = messages.stream().filter(message -> message.hasMissingData() == null).collect(Collectors.toCollection(LinkedList::new));
+        return new ArrayList<>(result);
     }
 
     // method, that copies registered value of one eye to missing value of another
