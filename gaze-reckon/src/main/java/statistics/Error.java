@@ -14,7 +14,7 @@ import java.util.*;
 public final class Error {
     final static double ALPHA = 0.05;   // Коэффициент значимости. Доверительная вероятность P = 1 - ALPHA.
 
-    public static HashMap<Stimulus[], Boolean[]> fisherTest(List<MappedDataItem> mappedDataList) {
+    public static HashMap<Stimulus[], Boolean> sigelTukeyTest(List<MappedDataItem> mappedDataList) {
         List<Stimulus> stimuli = Utils.getUniqueStimuli(mappedDataList);
         List<MappedDataItem> filteredMappedData = new LinkedList<>();
         for (MappedDataItem mappedDataItem : mappedDataList) {
@@ -22,7 +22,7 @@ public final class Error {
                 filteredMappedData.add(mappedDataItem);
             }
         }
-        HashMap<Stimulus[], Boolean[]> results = new HashMap<>();
+        HashMap<Stimulus[], Boolean> results = new HashMap<>();
         HashMap<Stimulus, ArrayList<Double>> xMap = new HashMap<>();
         HashMap<Stimulus, ArrayList<Double>> yMap = new HashMap<>();
         for (Stimulus currentStimulus : stimuli) {
@@ -43,17 +43,17 @@ public final class Error {
         ArrayList<Boolean[]> bArray = new ArrayList<>();
         for (Map.Entry<Stimulus, ArrayList<Double>> entry1 : xMap.entrySet()) {
             for (Map.Entry<Stimulus, ArrayList<Double>> entry2 : xMap.entrySet()) {
-                Boolean fTest = Stats.fisherTest(entry1.getValue(), entry2.getValue());
+                Boolean fTest = Stats.sigelTukeyTest(entry1.getValue(), entry2.getValue());
                 bArray.add(new Boolean[]{fTest, null});
             }
         }
         Iterator<Boolean[]> iterator = bArray.iterator();
         for (Map.Entry<Stimulus, ArrayList<Double>> entry1 : yMap.entrySet()) {
             for (Map.Entry<Stimulus, ArrayList<Double>> entry2 : yMap.entrySet()) {
-                Boolean fTest = Stats.fisherTest(entry1.getValue(), entry2.getValue());
+                Boolean fTest = Stats.sigelTukeyTest(entry1.getValue(), entry2.getValue());
                 Boolean[] t = iterator.next();
                 t[1] = fTest;
-                results.put(new Stimulus[]{entry1.getKey(), entry2.getKey()}, t);
+                results.put(new Stimulus[]{entry1.getKey(), entry2.getKey()}, t[0] && t[1]);
             }
         }
         return results;

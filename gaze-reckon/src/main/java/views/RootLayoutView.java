@@ -119,14 +119,18 @@ public class RootLayoutView {
     }
 
     @FXML
-    private void handleFTest() {
+    private void handleSigelTukeyTest() {
         DataRecovery.listwiseDeletion(mainApp.getValue().getMessages());
         ArrayList<MappedDataItem> mappedDataList = DataController.createMappedData(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
-        HashMap<Stimulus[], Boolean[]> stats = Error.fisherTest(mappedDataList);
+        HashMap<Stimulus[], Boolean> stats = Error.sigelTukeyTest(mappedDataList);
         System.out.println("F-Test\nStimulus 1 x;Stimulus 1 y;Stimulus 2 x;Stimulus 2 y;F-Test x;F-Test y");
-        for (Map.Entry<Stimulus[], Boolean[]> entry : stats.entrySet()) {
-            System.out.println("" + entry.getKey()[0] + entry.getKey()[1] + entry.getValue()[0] + ";" + entry.getValue()[1]);
+        double k = 0, all = 0;
+        for (Map.Entry<Stimulus[], Boolean> entry : stats.entrySet()) {
+            System.out.println("" + entry.getKey()[0] + entry.getKey()[1] + entry.getValue());
+            if (entry.getValue()) k++;
+            all ++;
         }
+        System.out.println("k  = " + k / all);
     }
 
     public void handleCountMissesByStimulus() {

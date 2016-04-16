@@ -2,7 +2,9 @@ package statistics;
 
 import org.apache.commons.math3.distribution.FDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.util.Pair;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,6 +87,88 @@ public class Stats {
             sum += deviation;
         }
         return sum / deviations.size();
+    }
+
+    static Boolean sigelTukeyTest(List<Double> sample1, List<Double> sample2) {
+//        double criticalValue = 1.64485; // p = 0.90
+        double criticalValue = 1.96; // p = 0.95
+
+        Double mean1 = mean(sample1);
+        Double mean2 = mean(sample2);
+        for (int i = 0; i < sample1.size(); i++) {
+            sample1.set(i, sample1.get(i) - mean1);
+        }
+        for (int i = 0; i < sample2.size(); i++) {
+            sample2.set(i, sample2.get(i) - mean2);
+        }
+
+        LinkedList<Pair<Double, Integer>> union = new LinkedList<>();
+        for (Double aDouble : sample1) {
+            union.add(new Pair<>(aDouble, 1));
+        }
+        for (Double aDouble : sample2) {
+            union.add(new Pair<>(aDouble, 2));
+        }
+        ArrayList<Pair<Double, Integer>> arrayList = new ArrayList<>(union);
+        arrayList.sort((Pair<Double, Integer> a, Pair<Double, Integer> b) -> a.getFirst().compareTo(b.getFirst()));
+        Pair<Double, Integer>[] array = new Pair[union.size()];
+
+//        for (int i = 0; i < union.size(); i++) {
+//            if (i % 2 == 0) {
+//                array[i/2] = arrayList.get(i);
+//            } else {
+//                array[array.length - 1 - i / 2] = arrayList.get(i);
+//            }
+//        }
+        int k1 = 0;
+        int k2 = 0;
+        while (k1 < arrayList.size()) {
+            if (k1 < arrayList.size()) {
+                array[k1] = arrayList.get(k2);
+                k1++;
+            }
+            if (k1 < arrayList.size()) {
+                array[k1] = arrayList.get(arrayList.size() - k2 - 1);
+                k1++;
+                k2++;
+            }
+            if (k1 < arrayList.size()) {
+                array[k1] = arrayList.get(arrayList.size() - k2 - 1);
+                k1++;
+            }
+            if (k1 < arrayList.size()) {
+                array[k1] = arrayList.get(k2);
+                k1++;
+                k2++;
+            }
+        }
+
+        int r1 = 0, r2 = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].getValue() == 1) {
+                r1 += i + 1;
+            } else if (array[i].getValue() == 2) {
+                r2 += i + 1;
+            }
+        }
+        int m, n, r;
+        if (sample1.size() < sample2.size()) {
+            m = sample1.size();
+            n = sample2.size();
+            r = r1;
+        } else {
+            m = sample2.size();
+            n = sample1.size();
+            r = r2;
+        }
+
+        //Double W = (r - sample1.size() * sample2.size() / 2) / Math.sqrt(sample1.size() * sample2.size() * (sample1.size() + sample2.size() + 1) / 12);
+        Double W = (r - m * (n + m + 1) / 2) / Math.sqrt(n * m * (n + m + 1) / 12);
+        if (W < criticalValue) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     static Boolean fisherTest(List<Double> sample1, List<Double> sample2) {
