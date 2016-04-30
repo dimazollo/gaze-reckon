@@ -153,9 +153,11 @@ public final class Error {
                 Double chiTest = chiSquaredDistribution.inverseCumulativeProbability(ALPHA);
 
                 Double[] resX = Utils.optimizeUniParameter(meanX, standardDeviationX, xList);
-                meanX = resX[0]; standardDeviationX = resX[1];
+                meanX = resX[0];
+                standardDeviationX = resX[1];
                 Double[] resY = Utils.optimizeUniParameter(meanY, standardDeviationY, yList);
-                meanY = resY[0]; standardDeviationY = resY[1];
+                meanY = resY[0];
+                standardDeviationY = resY[1];
                 System.out.println("expected chi = " + chiTest);
                 Double chiX = Stats.chiSquared(meanX, standardDeviationX, xList);
                 System.out.println("chi X = " + chiX);
@@ -284,6 +286,32 @@ public final class Error {
             Double stDevY = Stats.standardDeviation(deltasY);
             results.put(currentStimulus, new Double[]{absDevX, absDevY, stDevX, stDevY});
         }
+        return results;
+    }
+
+    public static Double[] computeDeviationsForAll(ArrayList<MappedDataItem> mappedData) {
+        // Часть с рачётом отклонений.
+        LinkedList<Double> deltasX = new LinkedList<>();
+        LinkedList<Double> deltasY = new LinkedList<>();
+        Integer numberOfMappedMsgs = 0;
+        Integer numberOfFixMsgs = 0;
+        for (MappedDataItem mappedDataItem : mappedData) {
+            numberOfMappedMsgs += mappedDataItem.getMessages().size();
+            numberOfFixMsgs += mappedDataItem.getFixationsMessages().size();
+            for (Message message : mappedDataItem.getFixationsMessages()) {
+                deltasX.add(message.values.frame.raw.x - mappedDataItem.getStimulus().getPosition().x);
+                deltasY.add(message.values.frame.raw.y - mappedDataItem.getStimulus().getPosition().y);
+            }
+        }
+
+        Double absDevX = Stats.absoluteDeviation(deltasX);
+        Double absDevY = Stats.absoluteDeviation(deltasY);
+        Double stDevX = Stats.standardDeviation(deltasX);
+        Double stDevY = Stats.standardDeviation(deltasY);
+
+        System.out.println("Mapped messages = " + numberOfMappedMsgs);
+        System.out.println("Fixation messages = " + numberOfFixMsgs);
+        Double[] results = new Double[]{absDevX, absDevY, stDevX, stDevY};
         return results;
     }
 }

@@ -10,10 +10,13 @@
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleWriteData" text="Write data"/>
+                        <MenuItem mnemonicParsing="false" onAction="#handleComputeErrorsZones"
+                                  text="Compute errors by zones"/>
                         <MenuItem mnemonicParsing="false" onAction="#handleComputeErrors" text="Compute errors"/>
                         <MenuItem mnemonicParsing="false" onAction="#handleNormalityTest" text="Normality test"/>
                         <MenuItem mnemonicParsing="false" onAction="#handleSigelTukeyTest" text="Sigel-Tukey test"/>
-                        <MenuItem mnemonicParsing="false" onAction="#handleCountMissesByStimulus" text="Count misses by stimulus"/>
+                        <MenuItem mnemonicParsing="false" onAction="#handleCountMissesByStimulus"
+                                  text="Count misses by stimulus"/>
                         <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit"/>
                     </items>
