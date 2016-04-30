@@ -3,29 +3,32 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
-<Accordion maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-           prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<Accordion xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+           prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
            fx:controller="views.graphs.ViewOfData">
     <panes>
         <TitledPane animated="false" text="LineChart">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
-                        <LineChart fx:id="lineChart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                        <LineChart fx:id="lineChart" animated="false" stylesheets="@../css/nosymbols.css"
+                                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                             <xAxis>
-                                <NumberAxis fx:id="botAxis" side="BOTTOM"/>
+                                <NumberAxis fx:id="botAxis" animated="false" side="BOTTOM"/>
                             </xAxis>
                             <yAxis>
-                                <NumberAxis fx:id="leftAxis" side="LEFT"/>
+                                <NumberAxis fx:id="leftAxis" animated="false" side="LEFT"/>
                             </yAxis>
+                            <cursor>
+                                <Cursor fx:constant="CROSSHAIR"/>
+                            </cursor>
                         </LineChart>
-                        <Button layoutX="504.0" layoutY="11.0" mnemonicParsing="false" onAction="#updateDistancesGraph"
-                                text="Show" AnchorPane.rightAnchor="20.0"/>
-                        <Slider fx:id="sliderCountStimuli" layoutX="81.6" layoutY="17.0" max="1000.0" min="1.0"
-                                prefHeight="14.0" prefWidth="425.0" AnchorPane.leftAnchor="72.0"
-                                AnchorPane.rightAnchor="90.0"/>
+                        <Slider fx:id="sliderCountStimuli" blockIncrement="1.0" layoutX="91.6" layoutY="17.0"
+                                majorTickUnit="100.0" max="1000.0" minorTickCount="0" prefHeight="14.0"
+                                showTickMarks="true" AnchorPane.leftAnchor="82.0" AnchorPane.rightAnchor="23.0"/>
                         <Label fx:id="lblCount" layoutX="27.0" layoutY="16.0" prefHeight="17.0" prefWidth="50.0"
                                text="1" textAlignment="RIGHT"/>
                     </children>

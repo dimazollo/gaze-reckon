@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
@@ -37,7 +36,7 @@ public class ViewOfData {
     @FXML
     private NumberAxis leftAxis;
     @FXML
-    private LineChart lineChart;
+    private XYChart lineChart;
 
 
     @FXML
@@ -48,8 +47,8 @@ public class ViewOfData {
 
     public void updateDistancesGraph() {
         //TODO - Это условие и подсчёт расстояний нужно отсюда безопасно убрать.
-        if(distances==null){
-            distances = computeDistances(Message.DELTA_AVERAGE);
+        if (distances == null) {
+            distances = computeDistances(Message.DELTA_RAW);
         }
         lineChart.getData().clear();
         sliderCountStimuli.setMin(1);
