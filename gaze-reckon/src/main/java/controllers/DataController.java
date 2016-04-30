@@ -20,6 +20,7 @@ import java.util.*;
  * @Author Dmitry Volovod
  * created on 16.10.2015
  */
+
 public class DataController implements Writable {
     private static DataController instance;
     private final Property<Main> mainApp;

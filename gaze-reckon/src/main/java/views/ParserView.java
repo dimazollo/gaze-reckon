@@ -401,7 +401,7 @@ public class ParserView {
                 DataRecovery.interpolationRecovery(mainApp.getValue().getMessages());       //restores missing data
             }
             if (rootLayoutView.getListwiseDeletionFlag()) {
-                DataRecovery.listwiseDeletion(mainApp.getValue().getMessages());
+                mainApp.getValue().setMessages(DataRecovery.listwiseDeletion(mainApp.getValue().getMessages()));
             }
 
             LinkedHashMap<String, CheckBox> firedFlags = getFiredFlags(); //consists of names and related flags

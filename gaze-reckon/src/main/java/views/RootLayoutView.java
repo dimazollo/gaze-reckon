@@ -74,8 +74,8 @@ public class RootLayoutView {
     }
 
     @FXML
-    private void handleComputeErrors() {
-        DataRecovery.listwiseDeletion(mainApp.getValue().getMessages());
+    private void handleComputeErrorsZones() {
+        mainApp.getValue().setMessages(DataRecovery.listwiseDeletion(mainApp.getValue().getMessages()));
 //        LinkedHashMap<Message, Stimulus> mappedData = DataController.mapTrackersAndStimuli(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
 //        LinkedHashMap<Message, Stimulus> filteredMap = Error.filterStimulusMessageMap(mappedData);
         ArrayList<MappedDataItem> mappedDataList = DataController.createMappedData(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
@@ -93,8 +93,16 @@ public class RootLayoutView {
     }
 
     @FXML
+    private void handleComputeErrors() {
+        mainApp.getValue().setMessages(DataRecovery.listwiseDeletion(mainApp.getValue().getMessages()));
+        ArrayList<MappedDataItem> mappedDataList = DataController.createMappedData(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
+        Double[] results = Error.computeDeviationsForAll(mappedDataList);
+        System.out.println("absDevX\tabsDevY\tstDevX\tstDevY\n" + results[0] + "\t" + results[1] + "\t" + results[2] + "\t" + results[3]);
+    }
+
+    @FXML
     private void handleNormalityTest() {
-        DataRecovery.listwiseDeletion(mainApp.getValue().getMessages());
+        mainApp.getValue().setMessages(DataRecovery.listwiseDeletion(mainApp.getValue().getMessages()));
         ArrayList<MappedDataItem> mappedDataList = DataController.createMappedData(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
         HashMap<Stimulus, Boolean[]> stats = Error.normalityTest(mappedDataList);
         for (Map.Entry<Stimulus, Boolean[]> entry : stats.entrySet()) {
@@ -120,10 +128,10 @@ public class RootLayoutView {
 
     @FXML
     private void handleSigelTukeyTest() {
-        DataRecovery.listwiseDeletion(mainApp.getValue().getMessages());
+        mainApp.getValue().setMessages(DataRecovery.listwiseDeletion(mainApp.getValue().getMessages()));
         ArrayList<MappedDataItem> mappedDataList = DataController.createMappedData(mainApp.getValue().getMessages(), mainApp.getValue().getStimuli());
         HashMap<Stimulus[], Boolean> stats = Error.sigelTukeyTest(mappedDataList);
-        System.out.println("F-Test\nStimulus 1 x;Stimulus 1 y;Stimulus 2 x;Stimulus 2 y;F-Test x;F-Test y");
+        System.out.println("Sigel-Tukey test\nStimulus 1 x;Stimulus 1 y;Stimulus 2 x;Stimulus 2 y;Sigel-Tukey test");
         double k = 0, all = 0;
         for (Map.Entry<Stimulus[], Boolean> entry : stats.entrySet()) {
             System.out.println("" + entry.getKey()[0] + entry.getKey()[1] + entry.getValue());

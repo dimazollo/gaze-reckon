@@ -127,7 +127,7 @@ public final class DataRecovery {
 
     // TODO - Отказаться от этого варианта и перейти на использование второго.
     @Deprecated
-    public static void listwiseDeletionOld(ArrayList<Message> messages) {
+    public static void listwiseDeletionUnsafe(ArrayList<Message> messages) {
         for (int i = 0; i < messages.size(); i++) {
             if (messages.get(i).hasMissingData() != null) {
                 messages.remove(i);
@@ -137,7 +137,9 @@ public final class DataRecovery {
     }
 
     public static ArrayList<Message> listwiseDeletion(ArrayList<Message> messages) {
-        List<Message> result = messages.stream().filter(message -> message.hasMissingData() == null).collect(Collectors.toCollection(LinkedList::new));
+        List<Message> result = messages.stream().filter(
+                message -> message.hasMissingData() == null).collect(Collectors.toCollection(LinkedList::new)
+        );
         return new ArrayList<>(result);
     }
 
