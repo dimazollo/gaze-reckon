@@ -152,10 +152,10 @@ public final class Error {
                 ChiSquaredDistribution chiSquaredDistribution = new ChiSquaredDistribution(Stats.sturgesRule(xList.size()));
                 Double chiTest = chiSquaredDistribution.inverseCumulativeProbability(ALPHA);
 
-                Double[] resX = Utils.optimizeUniParameter(meanX, standardDeviationX, xList);
+                Double[] resX = Utils.optimizeTwoParameters(meanX, standardDeviationX, xList);
                 meanX = resX[0];
                 standardDeviationX = resX[1];
-                Double[] resY = Utils.optimizeUniParameter(meanY, standardDeviationY, yList);
+                Double[] resY = Utils.optimizeTwoParameters(meanY, standardDeviationY, yList);
                 meanY = resY[0];
                 standardDeviationY = resY[1];
                 System.out.println("expected chi = " + chiTest);

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Utils {
 
-    public static Double[] optimizeUniParameter(Double mu, Double sigma, List<Double> doubles){
+    public static Double[] optimizeTwoParameters(Double mu, Double sigma, List<Double> doubles){
         double step = 0.01;
         Double currentSigma = null;
         Double currentMu = null;
