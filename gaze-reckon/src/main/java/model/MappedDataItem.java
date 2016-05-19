@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Mapped item of experimental data from eye-tracker and a visual stimulus provided by stimulus visualiser.
+ * Mapped item of experimental data from eye-tracker and visual stimulus provided by stimulus visualiser.
  *
  * @Author Dmitry Volovod, Mikhail Turicyn
  * created on 10.03.2016
@@ -90,7 +90,7 @@ public class MappedDataItem {
         }
         meanX /= filteredMessages.size();
         meanY /= filteredMessages.size();
-        return new double[]{meanX, minDeltaX, maxDeltaX, meanY, minDeltaY, maxDeltaY};
+        return new double[]{ meanX, minDeltaX, maxDeltaX, meanY, minDeltaY, maxDeltaY };
     }
 
     public boolean hasMissingData() {

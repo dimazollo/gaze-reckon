@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
  * created on 10.11.2015
  */
 
-//this interface is responsible for output results obtained while doing computations into the file
+// This interface is responsible for output results obtained while doing computations into the file.
 interface Writable {
 
     void write(LinkedHashMap<String, CheckBox> firedFlags, ArrayList<Message> messages, File csvFile) throws IOException;

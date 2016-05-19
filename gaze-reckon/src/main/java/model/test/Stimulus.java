@@ -19,7 +19,9 @@ import java.util.Date;
 public class Stimulus {
     public static final String POSITION = "stimulus position";
 
-    public static final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss:S");
+    public static final DateFormat inputDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss:S");
+    public static final DateFormat outputDateFormat = new SimpleDateFormat("HH:mm:ss.S");
+
     private Date timestamp;
     // Поле timer есть во входном файле, но оно не используется внутри программы.
     // Т.е. удалять его нужно из программы предъявления стимулов, а потом уже здесь.
@@ -28,7 +30,7 @@ public class Stimulus {
 
     public Stimulus(String s) throws ParseException, IndexOutOfBoundsException {
         String[] strings = s.split("\t");
-        timestamp = dateFormat.parse(strings[0]);
+        timestamp = inputDateFormat.parse(strings[0]);
         timer = Double.parseDouble(strings[1]);
         position = new Point(Double.parseDouble(strings[2]), Double.parseDouble(strings[3]));
     }
@@ -50,10 +52,9 @@ public class Stimulus {
     }
 
     public String getTimestampAsString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.S");
         String timestamp;
         try {
-            timestamp = dateFormat.format(this.timestamp);
+            timestamp = outputDateFormat.format(this.timestamp);
         } catch (NullPointerException e) {
             timestamp = "0";
         }
@@ -62,18 +63,17 @@ public class Stimulus {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == this)
+        if (obj == this)
             return true;
      /* obj ссылается на null */
-        if(obj == null)
+        if (obj == null)
             return false;
      /* Удостоверимся, что ссылки имеют тот же самый тип */
-        if(!(getClass() == obj.getClass()))
+        if (!(getClass() == obj.getClass()))
             return false;
-        else
-        {
+        else {
             Stimulus tmp = (Stimulus) obj;
-            if(tmp.getPosition().x == this.position.x && tmp.getPosition().y == this.position.y &&
+            if (tmp.getPosition().x == this.position.x && tmp.getPosition().y == this.position.y &&
                     tmp.getTimestamp() == this.timestamp)
                 return true;
             else
