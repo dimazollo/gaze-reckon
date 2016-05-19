@@ -1,48 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
-<Accordion xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-           prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+<?import org.controlsfx.control.RangeSlider?>
+<Accordion xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+           minWidth="-Infinity"
+           prefHeight="472.0" prefWidth="615.0" xmlns="http://javafx.com/javafx/8"
            fx:controller="views.graphs.ViewOfData">
     <panes>
-        <TitledPane animated="false" text="LineChart">
+        <TitledPane animated="false" text="Distances">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
-                        <LineChart fx:id="lineChart" animated="false" stylesheets="@../css/nosymbols.css"
-                                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                        <LineChart fx:id="distancesChart" animated="false" createSymbols="false" layoutX="27.6"
+                                   layoutY="62.6" legendVisible="false" prefHeight="323.0" prefWidth="575.0"
+                                   AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="18.0"
+                                   AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="53.0">
                             <xAxis>
-                                <NumberAxis fx:id="botAxis" animated="false" side="BOTTOM"/>
+                                <NumberAxis animated="false" side="BOTTOM" fx:id="xDistancesAxis"/>
                             </xAxis>
                             <yAxis>
-                                <NumberAxis fx:id="leftAxis" animated="false" side="LEFT"/>
+                                <NumberAxis fx:id="yDistancesAxis" animated="false" side="LEFT"/>
                             </yAxis>
                             <cursor>
                                 <Cursor fx:constant="CROSSHAIR"/>
                             </cursor>
                         </LineChart>
-                        <Slider fx:id="sliderCountStimuli" blockIncrement="1.0" layoutX="91.6" layoutY="17.0"
-                                majorTickUnit="100.0" max="1000.0" minorTickCount="0" prefHeight="14.0"
-                                showTickMarks="true" AnchorPane.leftAnchor="82.0" AnchorPane.rightAnchor="23.0"/>
-                        <Label fx:id="lblCount" layoutX="27.0" layoutY="16.0" prefHeight="17.0" prefWidth="50.0"
-                               text="1" textAlignment="RIGHT"/>
+                        <Label fx:id="lblCount" alignment="CENTER" layoutX="37.0" layoutY="16.0" prefHeight="17.0"
+                               prefWidth="40.0" style="-fx-border-color: lightgrey;" text="1"/>
+                        <Slider fx:id="countStimuliSlider" blockIncrement="1.0" layoutX="91.6" layoutY="17.0"
+                                majorTickUnit="10.0" minorTickCount="0" showTickLabels="true" showTickMarks="true"
+                                AnchorPane.leftAnchor="82.0" AnchorPane.rightAnchor="23.0"/>
                     </children>
                 </AnchorPane>
             </content>
         </TitledPane>
-        <TitledPane animated="false" text="untitled 2">
+        <TitledPane animated="false" text="Trace">
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                        <ScatterChart fx:id="traceChart" animated="false" legendVisible="false" prefHeight="396.0"
+                                      prefWidth="613.0" stylesheets="@../css/scatterChartSymbol.css"
+                                      AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <xAxis>
+                                <NumberAxis autoRanging="false" side="TOP" tickUnit="160.0" upperBound="1280.0"
+                                            fx:id="xTraceAxis"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis fx:id="yTraceAxis" autoRanging="false" lowerBound="-1024.0" side="LEFT"
+                                            tickUnit="128.0" upperBound="0.0"/>
+                            </yAxis>
+                            <padding>
+                                <Insets right="10.0"/>
+                            </padding>
+                            <cursor>
+                                <Cursor fx:constant="CROSSHAIR"/>
+                            </cursor>
+                        </ScatterChart>
+                    </children>
+                </AnchorPane>
             </content>
         </TitledPane>
-        <TitledPane animated="false" text="untitled 3">
+        <TitledPane animated="false" text="Сoordinates evolution">
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                        <VBox prefHeight="1080.0" prefWidth="1920.0" spacing="8.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <HBox layoutX="18.6" layoutY="19.6" AnchorPane.bottomAnchor="345.0"
+                                      AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+                                      AnchorPane.topAnchor="10.0">
+                                    <children>
+                                        <Label fx:id="lowBoundLabel" alignment="CENTER" layoutX="38.0" layoutY="21.0"
+                                               minWidth="90.0" prefHeight="17.0" prefWidth="80.0"
+                                               style="-fx-border-color: lightgrey;" text="1"/>
+                                        <RangeSlider fx:id="coordinatesRangeSlider" prefWidth="1920.0"
+                                                     showTickLabels="true" showTickMarks="true">
+                                            <HBox.margin>
+                                                <Insets left="10.0" right="10.0"/>
+                                            </HBox.margin>
+                                        </RangeSlider>
+                                        <Label fx:id="highBoundLabel" alignment="CENTER" layoutX="570.0" layoutY="21.0"
+                                               minWidth="90.0" prefHeight="17.0" prefWidth="80.0"
+                                               style="-fx-border-color: lightgrey;" text="1"/>
+                                    </children>
+                                </HBox>
+                                <TextField fx:id="widthOfSmoothingWindow" maxWidth="100.0"
+                                           onKeyPressed="#updateSmoothingWindow" prefWidth="100" text="100.0"/>
+                                <LineChart fx:id="coordinatesChart" createSymbols="false" animated="false" layoutX="18.6"
+                                           layoutY="43.6" prefHeight="1080.0" prefWidth="1920.0"
+                                           AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+                                           AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="34.0">
+                                    <xAxis>
+                                        <NumberAxis autoRanging="false" forceZeroInRange="false" label="Time"
+                                                    side="BOTTOM" tickLabelRotation="0.0" fx:id="xCoordinatesAxis"/>
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis fx:id="yCoordinatesAxis" autoRanging="false" label="Coordinate, px"
+                                                    lowerBound="-100.0" side="LEFT" tickUnit="100.0"
+                                                    upperBound="1400.0"/>
+                                    </yAxis>
+                                    <cursor>
+                                        <Cursor fx:constant="CROSSHAIR"/>
+                                    </cursor>
+                                </LineChart>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
             </content>
         </TitledPane>
     </panes>

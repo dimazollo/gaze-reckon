@@ -2,6 +2,7 @@ package views;
 
 import controllers.DataController;
 import dataRecovery.DataRecovery;
+import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -50,8 +51,12 @@ public class RootLayoutView {
     }
 
     public void showCharts() {
-        mainApp.getValue().getViewOfData().updateDistancesGraph(); // Обновление графика с расстояниями перед открытием окошка с графиками.
         mainApp.getValue().getViewOfDataStage().show();
+        if (mainApp.getValue().getStimuli() != null) {
+            mainApp.getValue().getViewOfData().updateDistancesChart(); // Обновление графика с расстояниями перед открытием окошка с графиками.
+        }
+//        Platform.runLater(() -> mainApp.getValue().getViewOfData().initTraceChart());
+        Platform.runLater(() -> mainApp.getValue().getViewOfData().initCoordinatesGraph());
     }
 
     @FXML
@@ -136,7 +141,7 @@ public class RootLayoutView {
         for (Map.Entry<Stimulus[], Boolean> entry : stats.entrySet()) {
             System.out.println("" + entry.getKey()[0] + entry.getKey()[1] + entry.getValue());
             if (entry.getValue()) k++;
-            all ++;
+            all++;
         }
         System.out.println("k  = " + k / all);
     }

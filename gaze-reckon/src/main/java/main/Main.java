@@ -1,7 +1,6 @@
 package main;
 
 import javafx.application.Application;
-import javafx.beans.property.Property;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,10 +26,10 @@ import java.util.ArrayList;
  */
 public class Main extends Application {
 
-    public Property<ArrayList<Message>> messagesProperty;
-    public Property<ArrayList<Stimulus>> stimuliProperty;
-    private volatile ArrayList<Message> messages;    //set of tracker messages of eye-tracking data
-    private volatile ArrayList<Stimulus> stimuli;    //set of stimuli of experiment
+//    public Property<ArrayList<Message>> messagesProperty;
+//    public Property<ArrayList<Stimulus>> stimuliProperty;
+    private volatile ArrayList<Message> messages;    // Set of tracker messages of eye-tracking data.
+    private volatile ArrayList<Stimulus> stimuli;    // Set of stimuli of experiment.
 
     private Stage primaryStage;
     private Stage viewOfDataStage;
@@ -113,15 +112,15 @@ public class Main extends Application {
         viewOfData = fxmlLoader.getController();
         viewOfDataStage.setTitle("Graphs");
         viewOfDataStage.setScene(new Scene(root));
-        viewOfDataStage.setMinHeight(600);
-        viewOfDataStage.setMinWidth(400);
+        viewOfDataStage.setMinWidth(1024);
+        viewOfDataStage.setMinHeight(768);
         viewOfData.setMainApp(this);
         this.viewOfDataStage = viewOfDataStage;
     }
 
     private void initRootLayout() {
         try {
-            // Load root layout from fxml file
+            // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("/fxml/RootLayout.fxml"));
             rootLayout = loader.load();
