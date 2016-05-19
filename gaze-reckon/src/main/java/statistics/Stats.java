@@ -162,7 +162,6 @@ public class Stats {
             r = r2;
         }
 
-        //Double W = (r - sample1.size() * sample2.size() / 2) / Math.sqrt(sample1.size() * sample2.size() * (sample1.size() + sample2.size() + 1) / 12);
         Double W = (r - m * (n + m + 1) / 2) / Math.sqrt(n * m * (n + m + 1) / 12);
         if (W < criticalValue) {
             return true;

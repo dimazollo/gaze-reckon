@@ -26,8 +26,8 @@ public final class Error {
         HashMap<Stimulus, ArrayList<Double>> xMap = new HashMap<>();
         HashMap<Stimulus, ArrayList<Double>> yMap = new HashMap<>();
         for (Stimulus currentStimulus : stimuli) {
-            List xList = new LinkedList<>();
-            List yList = new LinkedList<>();
+            List<Double> xList = new LinkedList<>();
+            List<Double> yList = new LinkedList<>();
             for (MappedDataItem mappedDataItem : filteredMappedData) {
                 if (currentStimulus.getPosition().x == mappedDataItem.getStimulus().getPosition().x &&
                         currentStimulus.getPosition().y == mappedDataItem.getStimulus().getPosition().y) {
@@ -311,7 +311,6 @@ public final class Error {
 
         System.out.println("Mapped messages = " + numberOfMappedMsgs);
         System.out.println("Fixation messages = " + numberOfFixMsgs);
-        Double[] results = new Double[]{absDevX, absDevY, stDevX, stDevY};
-        return results;
+        return new Double[]{absDevX, absDevY, stDevX, stDevY};
     }
 }
