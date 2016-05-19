@@ -1,8 +1,8 @@
 package dataRecovery;
 
-import javafx.util.Pair;
 import model.eyetracker.Frame;
 import model.eyetracker.Message;
+import org.apache.commons.math3.util.Pair;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
  */
 
 public final class DataRecovery {
+    private static final double THRESHOLD = 0.1;
+
     // Method of checking time field in the array of tracker messages and do all values unique.
     public static int correctRepetitive(ArrayList<Message> messages) {
         if (messages.size() < 2) return 0;
@@ -23,7 +25,7 @@ public final class DataRecovery {
             if (messages.get(i).values.frame.time ==
                     messages.get(i - 1).values.frame.time) {
                 messages.get(i).values.frame.time += 20; // Make time value be unique.
-                //TODO-Dmitry: Here should be code that makes timestamp be unique too.
+                // TODO-Dmitry: Here should be code that makes timestamp be unique too.
                 counter++;
                 // System.out.println(counter + " " + trackers.get(i-1).values.frame.time);
             }
@@ -49,7 +51,7 @@ public final class DataRecovery {
                 Message message = messages.get(i);
                 kindOfMiss = message.hasMissingData();
                 if (kindOfMiss != null) {
-                    Pair<java.lang.Integer, String> item = new Pair<>(i, kindOfMiss);
+                    Pair<Integer, String> item = new Pair<>(i, kindOfMiss);
                     series.add(item);
                 }
                 i++;
@@ -67,7 +69,7 @@ public final class DataRecovery {
                 Message last = messages.get(series.get(series.size() - 1).getKey() + 1);
                 for (int j = 0; j < series.size(); j++) {
                     Message current = messages.get(series.get(j).getKey());
-                    // To reduce amount of code it is better to redefine arithmetical operators in Frame.
+                    // TODO: To reduce amount of code it is better to redefine arithmetical operators in Frame.
                     current.values.frame.raw.x = (j + 1) * (last.values.frame.raw.x
                             - first.values.frame.raw.x) / (series.size() + 1)
                             + first.values.frame.raw.x;
@@ -125,7 +127,6 @@ public final class DataRecovery {
         messages.forEach(DataRecovery::oneEyeMissRecovery);
     }
 
-    // TODO - Отказаться от этого варианта и перейти на использование второго.
     @Deprecated
     public static void listwiseDeletionUnsafe(ArrayList<Message> messages) {
         for (int i = 0; i < messages.size(); i++) {
@@ -143,6 +144,59 @@ public final class DataRecovery {
         return new ArrayList<>(result);
     }
 
+    private static double gaussianKernel(double r) {
+        return Math.exp(-2.0 * r * r);
+    }
+
+    private static double calculateWeight(double distance, double h) {
+        return gaussianKernel(distance / h);
+    }
+
+    // Непараметрическая регрессия Надарая-Ватсона
+    public static List<Pair<Long, Double>> kernelRegression(List<Pair<Long, Double>> pairs, double h) {
+        LinkedList<Pair<Long, Double>> resultList = new LinkedList<>();
+        Double numerator, denominator;
+        Double weight, numeratorTerm;
+        for (int i = 0; i < pairs.size(); i++) {
+            int j = i - 1;
+            numerator = 0.0;
+            denominator = 0.0;
+            while (j >= 0) {
+                if (pairs.get(j).getValue() != 0.0) {
+                    weight = calculateWeight(pairs.get(j).getKey() - pairs.get(i).getKey(), h);
+//                    weight = calculateWeight(Point.distance(pairs.get(j).getKey(), pairs.get(j).getValue(),
+//                            pairs.get(i).getKey(), pairs.get(i).getValue()), h);
+                } else {
+                    j--;
+                    continue;
+                }
+                numeratorTerm = pairs.get(j).getValue() * weight;
+                numerator += numeratorTerm;
+                denominator += weight;
+                if (numeratorTerm / denominator < THRESHOLD) break;
+                j--;
+            }
+            j = i;
+            while (j < pairs.size()) {
+                if (pairs.get(j).getValue() != 0.0) {
+                    weight = calculateWeight(pairs.get(j).getKey() - pairs.get(i).getKey(), h);
+//                    weight = calculateWeight(Point.distance(pairs.get(j).getKey(), pairs.get(j).getValue(),
+//                                    pairs.get(i).getKey(), pairs.get(i).getValue()), h);
+                } else {
+                    j++;
+                    continue;
+                }
+                numeratorTerm = pairs.get(j).getValue() * weight;
+                numerator += numeratorTerm;
+                denominator += weight;
+                if (numeratorTerm / denominator < THRESHOLD) break;
+                j++;
+            }
+            resultList.add(new Pair<>(pairs.get(i).getKey(), numerator / denominator));
+        }
+        return resultList;
+    }
+
     // method, that copies registered value of one eye to missing value of another
     private static void oneEyeMissRecovery(Message message) {
         String kindOfMiss = message.hasMissingData();
@@ -155,7 +209,7 @@ public final class DataRecovery {
         }
     }
 
-    //class-wrap
+    // wrapper class
     private static class MissingValues {
         static ArrayList<Pair<Integer, String>> series;
 
