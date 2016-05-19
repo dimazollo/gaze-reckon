@@ -5,6 +5,7 @@
  */
 package model.eyetracker;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -13,6 +14,9 @@ import java.util.Date;
  * created on 10.09.2015
  */
 public class Frame {
+
+    public static final DateFormat outputDateFormat = new SimpleDateFormat("HH:mm:ss.S");
+
     public static final String RIGHT = "RIGHT";
     public static final String LEFT = "LEFT";
     public static final String BOTH = "BOTH";
@@ -39,10 +43,9 @@ public class Frame {
     }
 
     public String getTimestampAsString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.S");
         String timestamp;
         if (this.timestamp != null) {
-            timestamp = dateFormat.format(this.timestamp);
+            timestamp = outputDateFormat.format(this.timestamp);
         } else {
             timestamp = "0";
         }
@@ -51,12 +54,12 @@ public class Frame {
 
     public String hasMissingData() {
         if (righteye.hasMissingData() && lefteye.hasMissingData()) {
-            return BOTH;       //both eyes position is not defined;
+            return BOTH;        // Both eyes position is not defined.
         } else if (righteye.hasMissingData()) {
-            return RIGHT;       //right eye position is not defined;
+            return RIGHT;       // Right eye position is not defined.
         } else if (lefteye.hasMissingData()) {
-            return LEFT;       //left eye position is not defined;
-        } else return null; //both eyes data is correct;
+            return LEFT;        // Left eye position is not defined.
+        } else return null;     // All data is correct.
     }
 
     public String toString() {
