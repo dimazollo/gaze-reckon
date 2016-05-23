@@ -1,7 +1,7 @@
 package views.graphs;
 
 import controllers.DataController;
-import dataRecovery.DataRecovery;
+import dataRecovery.Regression;
 import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -218,7 +218,7 @@ public class ViewOfData {
         List<Pair<Long, Double>> xPoints = preparePlottingData(mainApp.getValue().getMessages(), Field.AVG_X);
         xPoints = Simplify.simplify(xPoints, Double.parseDouble(toleranceTextField.getText()), true);
 //        List<Pair<Long, Double>> yPoints = preparePlottingData(mainApp.getValue().getMessages(), Field.AVG_Y);
-        List<Pair<Long, Double>> smoothedXPoints = DataRecovery.kernelRegression(xPoints, Double.parseDouble(widthOfSmoothingWindow.getText()));
+        List<Pair<Long, Double>> smoothedXPoints = Regression.nadarayaWatson(xPoints, Double.parseDouble(widthOfSmoothingWindow.getText()), true);
 //        addSeriesToChart(xPoints, "X", coordinatesChart);
 //        addSeriesToChart(yPoints, coordinatesChart);
         addSeriesToChart(smoothedXPoints, "Smoothed X", coordinatesChart);
@@ -256,7 +256,7 @@ public class ViewOfData {
         return DataController.computeDistances(column, mappedData);
     }
 
-    public List<Pair<Long, Double>> preparePlottingData(ArrayList<Message> messages, Field field) {
+    public static List<Pair<Long, Double>> preparePlottingData(ArrayList<Message> messages, Field field) {
         List<Pair<Long, Double>> preparedList = new ArrayList<>();
         switch (field) {
             case RAW_X:
@@ -307,7 +307,7 @@ public class ViewOfData {
             event.consume();
             List<Pair<Long, Double>> xPoints = preparePlottingData(mainApp.getValue().getMessages(), Field.AVG_X);
             xPoints = Simplify.simplify(xPoints, Double.parseDouble(toleranceTextField.getText()), true);
-            xPoints = DataRecovery.kernelRegression(xPoints, Double.parseDouble(widthOfSmoothingWindow.getText()));
+            xPoints = Regression.nadarayaWatson(xPoints, Double.parseDouble(widthOfSmoothingWindow.getText()), true);
 
             addSeriesToChart(xPoints, "Smoothed X", coordinatesChart);
             numberOfPointsLabel.setText(String.valueOf(xPoints.size()));

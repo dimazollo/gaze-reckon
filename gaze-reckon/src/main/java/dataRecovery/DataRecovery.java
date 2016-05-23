@@ -3,6 +3,7 @@ package dataRecovery;
 import model.eyetracker.Frame;
 import model.eyetracker.Message;
 import org.apache.commons.math3.util.Pair;
+import views.graphs.ViewOfData;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
  */
 
 public final class DataRecovery {
-    private static final double THRESHOLD = 0.1;
+    private static final int FRAME_RATE = 30;
 
     // Method of checking time field in the array of tracker messages and do all values unique.
     public static int correctRepetitive(ArrayList<Message> messages) {
@@ -62,20 +63,24 @@ public final class DataRecovery {
     }
 
     // Here are bunch of data recovery approaches. they should be coded separately.
-    private static void interpolate(ArrayList<Message> messages, MissingValues series) {
-        if (series.size() < 4 && series.size() > 0) {
+    private static void interpolate(ArrayList<Message> messages, MissingValues series, int frameRate) {
+        if (series.size() < (1000 / frameRate * 3) && series.size() > 0) {
             if (series.get(0).getKey() != 0 && series.get(series.size() - 1).getKey() != 0) {
                 Message first = messages.get(series.get(0).getKey() - 1);
                 Message last = messages.get(series.get(series.size() - 1).getKey() + 1);
                 for (int j = 0; j < series.size(); j++) {
                     Message current = messages.get(series.get(j).getKey());
                     // TODO: To reduce amount of code it is better to redefine arithmetical operators in Frame.
-                    current.values.frame.raw.x = (j + 1) * (last.values.frame.raw.x
-                            - first.values.frame.raw.x) / (series.size() + 1)
-                            + first.values.frame.raw.x;
-                    current.values.frame.raw.y = (j + 1) * (last.values.frame.raw.y
-                            - first.values.frame.raw.y) / (series.size() + 1)
-                            + first.values.frame.raw.y;
+
+                    /* Interpolation of raw data commented out. */
+//
+//                    current.values.frame.raw.x = (j + 1) * (last.values.frame.raw.x
+//                            - first.values.frame.raw.x) / (series.size() + 1)
+//                            + first.values.frame.raw.x;
+//                    current.values.frame.raw.y = (j + 1) * (last.values.frame.raw.y
+//                            - first.values.frame.raw.y) / (series.size() + 1)
+//                            + first.values.frame.raw.y;
+
                     current.values.frame.avg.x = (j + 1) * (last.values.frame.avg.x
                             - first.values.frame.avg.x) / (series.size() + 1)
                             + first.values.frame.avg.x;
@@ -90,13 +95,15 @@ public final class DataRecovery {
                         current.values.frame.lefteye.avg.y = (j + 1) * (last.values.frame.lefteye.avg.y
                                 - first.values.frame.lefteye.avg.y) / (series.size() + 1)
                                 + first.values.frame.lefteye.avg.y;
-                        current.values.frame.lefteye.raw.x = (j + 1) * (last.values.frame.lefteye.raw.x
-                                - first.values.frame.lefteye.raw.x) / (series.size() + 1)
-                                + first.values.frame.lefteye.raw.x;
-                        current.values.frame.lefteye.raw.y = (j + 1) * (last.values.frame.lefteye.raw.y
-                                - first.values.frame.lefteye.raw.y) / (series.size() + 1)
-                                + first.values.frame.lefteye.raw.y;
+
+//                        current.values.frame.lefteye.raw.x = (j + 1) * (last.values.frame.lefteye.raw.x
+//                                - first.values.frame.lefteye.raw.x) / (series.size() + 1)
+//                                + first.values.frame.lefteye.raw.x;
+//                        current.values.frame.lefteye.raw.y = (j + 1) * (last.values.frame.lefteye.raw.y
+//                                - first.values.frame.lefteye.raw.y) / (series.size() + 1)
+//                                + first.values.frame.lefteye.raw.y;
                     }
+
                     if (series.get(j).getValue().equals(Frame.RIGHT) || series.get(j).getValue().equals(Frame.BOTH)) {
                         current.values.frame.righteye.avg.x = (j + 1) * (last.values.frame.righteye.avg.x
                                 - first.values.frame.righteye.avg.x) / (series.size() + 1)
@@ -104,12 +111,13 @@ public final class DataRecovery {
                         current.values.frame.righteye.avg.y = (j + 1) * (last.values.frame.righteye.avg.y
                                 - first.values.frame.righteye.avg.y) / (series.size() + 1)
                                 + first.values.frame.righteye.avg.y;
-                        current.values.frame.righteye.raw.x = (j + 1) * (last.values.frame.righteye.raw.x
-                                - first.values.frame.righteye.raw.x) / (series.size() + 1)
-                                + first.values.frame.righteye.raw.x;
-                        current.values.frame.righteye.raw.y = (j + 1) * (last.values.frame.righteye.raw.y
-                                - first.values.frame.righteye.raw.y) / (series.size() + 1)
-                                + first.values.frame.righteye.raw.y;
+
+//                        current.values.frame.righteye.raw.x = (j + 1) * (last.values.frame.righteye.raw.x
+//                                - first.values.frame.righteye.raw.x) / (series.size() + 1)
+//                                + first.values.frame.righteye.raw.x;
+//                        current.values.frame.righteye.raw.y = (j + 1) * (last.values.frame.righteye.raw.y
+//                                - first.values.frame.righteye.raw.y) / (series.size() + 1)
+//                                + first.values.frame.righteye.raw.y;
                     }
                 }
             }
@@ -119,7 +127,7 @@ public final class DataRecovery {
     public static void interpolationRecovery(ArrayList<Message> messages) {
         ArrayList<MissingValues> missingValues = DataRecovery.findMisses(messages);
         for (MissingValues missingValue : missingValues) {
-            interpolate(messages, missingValue);
+            interpolate(messages, missingValue, FRAME_RATE);
         }
     }
 
@@ -144,70 +152,44 @@ public final class DataRecovery {
         return new ArrayList<>(result);
     }
 
-    private static double gaussianKernel(double r) {
-        return Math.exp(-2.0 * r * r);
-    }
-
-    private static double calculateWeight(double distance, double h) {
-        return gaussianKernel(distance / h);
-    }
-
-    // Непараметрическая регрессия Надарая-Ватсона
-    public static List<Pair<Long, Double>> kernelRegression(List<Pair<Long, Double>> pairs, double h) {
-        LinkedList<Pair<Long, Double>> resultList = new LinkedList<>();
-        Double numerator, denominator;
-        Double weight, numeratorTerm;
-        for (int i = 0; i < pairs.size(); i++) {
-            int j = i - 1;
-            numerator = 0.0;
-            denominator = 0.0;
-            while (j >= 0) {
-                if (pairs.get(j).getValue() != 0.0) {
-                    weight = calculateWeight(pairs.get(j).getKey() - pairs.get(i).getKey(), h);
-//                    weight = calculateWeight(Point.distance(pairs.get(j).getKey(), pairs.get(j).getValue(),
-//                            pairs.get(i).getKey(), pairs.get(i).getValue()), h);
-                } else {
-                    j--;
-                    continue;
-                }
-                numeratorTerm = pairs.get(j).getValue() * weight;
-                numerator += numeratorTerm;
-                denominator += weight;
-                if (numeratorTerm / denominator < THRESHOLD) break;
-                j--;
-            }
-            j = i;
-            while (j < pairs.size()) {
-                if (pairs.get(j).getValue() != 0.0) {
-                    weight = calculateWeight(pairs.get(j).getKey() - pairs.get(i).getKey(), h);
-//                    weight = calculateWeight(Point.distance(pairs.get(j).getKey(), pairs.get(j).getValue(),
-//                                    pairs.get(i).getKey(), pairs.get(i).getValue()), h);
-                } else {
-                    j++;
-                    continue;
-                }
-                numeratorTerm = pairs.get(j).getValue() * weight;
-                numerator += numeratorTerm;
-                denominator += weight;
-                if (numeratorTerm / denominator < THRESHOLD) break;
-                j++;
-            }
-            resultList.add(new Pair<>(pairs.get(i).getKey(), numerator / denominator));
-        }
-        return resultList;
-    }
-
     // Method, that copies registered value of one eye to missing value of another.
     private static void oneEyeMissRecovery(Message message) {
         String kindOfMiss = message.hasMissingData();
         if (kindOfMiss != null) {
             if (kindOfMiss.equals(Frame.RIGHT)) {
-                message.values.frame.righteye = message.values.frame.lefteye;
+                message.values.frame.righteye.set(message.values.frame.lefteye);
             } else if (kindOfMiss.equals(Frame.LEFT)) {
-                message.values.frame.lefteye = message.values.frame.righteye;
+                message.values.frame.lefteye.set(message.values.frame.righteye);
             }
         }
     }
+
+    public static void regression(ArrayList<Message> messages, int frameRate) {
+        List<Pair<Long, Double>> xSeries = ViewOfData.preparePlottingData(messages, ViewOfData.Field.AVG_X);
+        List<Pair<Long, Double>> ySeries = ViewOfData.preparePlottingData(messages, ViewOfData.Field.AVG_Y);
+        for (int i = 0; i < xSeries.size(); i++) {
+
+        }
+        xSeries = Regression.nadarayaWatson(xSeries, 100, true);
+        ySeries = Regression.nadarayaWatson(ySeries, 100, true);
+        for (int i = 0; i < messages.size(); i++) {
+            messages.get(i).values.frame.avg.x = xSeries.get(i).getValue();
+            messages.get(i).values.frame.avg.y = ySeries.get(i).getValue();
+        }
+    }
+
+
+    public static void heuristic(ArrayList<Message> messages, boolean strabismus, int frameRate) {
+        if (!strabismus) {
+            oneEyeMissRecovery(messages);
+        }
+        ArrayList<MissingValues> missingValues = findMisses(messages);
+        for (MissingValues series : missingValues) {
+            interpolate(messages, series, frameRate);
+        }
+        regression(messages, frameRate);
+    }
+
 
     // wrapper class
     private static class MissingValues {

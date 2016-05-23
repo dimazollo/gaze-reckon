@@ -21,12 +21,12 @@ public class Frame {
     public static final String LEFT = "LEFT";
     public static final String BOTH = "BOTH";
 
-    public Date timestamp;
+    final public Date timestamp;
     public boolean fix;
-    public Point avg;
-    public Point raw;
-    public Eye lefteye;
-    public Eye righteye;
+    final public Point avg;
+    final public Point raw;
+    final public Eye lefteye;
+    final public Eye righteye;
     public int state;
     public long time;
 

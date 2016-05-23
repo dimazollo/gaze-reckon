@@ -10,9 +10,9 @@ package model.eyetracker;
  * created on 10.09.2015
  */
 public class Eye {
-    public Point avg;
-    public Point raw;
-    public Point pcenter;
+    final public Point avg;
+    final public Point raw;
+    final public Point pcenter;
     double psize;
 
     public Eye() {
@@ -20,6 +20,13 @@ public class Eye {
         pcenter = new Point();
         psize = 0;
         raw = new Point();
+    }
+
+    public void set(Eye eye) {
+        this.avg.set(eye.avg);
+        this.raw.set(eye.raw);
+        this.pcenter.set(eye.pcenter);
+        this.psize = eye.psize;
     }
 
     public boolean hasMissingData() {

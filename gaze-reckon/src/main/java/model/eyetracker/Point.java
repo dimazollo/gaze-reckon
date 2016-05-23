@@ -35,6 +35,31 @@ public class Point {
         return "" + x + fieldSeparator + y;
     }
 
+    public void add(Point p) {
+        this.x += p.x;
+        this.y += p.y;
+    }
+
+    public void substract(Point p) {
+        this.x -= p.x;
+        this.y -= p.y;
+    }
+
+    public void multiply(double d) {
+        this.x *= d;
+        this.y *= d;
+    }
+
+    public void divide(double d) {
+        this.x /= d;
+        this.y /= d;
+    }
+
+    public void set(Point p) {
+        this.x = p.x;
+        this.y = p.y;
+    }
+
     @Override
     public String toString() {
         return "" + x + ";" + y;

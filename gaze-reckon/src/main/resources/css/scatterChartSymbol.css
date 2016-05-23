@@ -5,9 +5,11 @@
     -fx-padding: 3px;
     -fx-opacity: 0.4;
 }
+/* Gaze point. */
 .default-color0.chart-symbol {
     -fx-background-color: #c04524, white;
 }
+/* Target spot */
 .default-color1.chart-symbol {
     -fx-background-color: #1fc036, white;
     -fx-background-insets: 0, 15;
