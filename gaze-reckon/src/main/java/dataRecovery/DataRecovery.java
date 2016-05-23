@@ -197,7 +197,7 @@ public final class DataRecovery {
         return resultList;
     }
 
-    // method, that copies registered value of one eye to missing value of another
+    // Method, that copies registered value of one eye to missing value of another.
     private static void oneEyeMissRecovery(Message message) {
         String kindOfMiss = message.hasMissingData();
         if (kindOfMiss != null) {

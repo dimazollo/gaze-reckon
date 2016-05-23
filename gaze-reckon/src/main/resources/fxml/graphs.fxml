@@ -92,7 +92,10 @@
                                 </HBox>
                                 <TextField fx:id="widthOfSmoothingWindow" maxWidth="100.0"
                                            onKeyPressed="#updateSmoothingWindow" prefWidth="100" text="100.0"/>
-                                <LineChart fx:id="coordinatesChart" createSymbols="false" animated="false" layoutX="18.6"
+                                <TextField fx:id="toleranceTextField" maxWidth="100.0"
+                                           onKeyPressed="#updateSmoothingWindow" prefWidth="100" text="0.0"/>
+                                <Label fx:id="numberOfPointsLabel" text="none" prefWidth="100.0" maxWidth="100.0"/>
+                                <LineChart fx:id="coordinatesChart" createSymbols="true" animated="false" layoutX="18.6"
                                            layoutY="43.6" prefHeight="1080.0" prefWidth="1920.0"
                                            AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
                                            AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="34.0">

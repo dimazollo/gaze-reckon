@@ -353,7 +353,7 @@ public class ParserView {
         try {
             File outputFile;
             if (dataController.getTrackerFile() == null) {
-                //TODO - move Alerts invocations into separate method.
+                //TODO - move Alerts invocations into separate class.
                 // Maybe making a class responsible for error handling would be wise decision
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -395,17 +395,17 @@ public class ParserView {
             }
             DataRecovery.correctRepetitive(mainApp.getValue().getMessages());
             if (rootLayoutView.getSimpleRecoveryFlag()) {
-                DataRecovery.oneEyeMissRecovery(mainApp.getValue().getMessages());       //restores missing data
+                DataRecovery.oneEyeMissRecovery(mainApp.getValue().getMessages());      // restores missing data
             }
             if (rootLayoutView.getLinearInterpolationFlag()) {
-                DataRecovery.interpolationRecovery(mainApp.getValue().getMessages());       //restores missing data
+                DataRecovery.interpolationRecovery(mainApp.getValue().getMessages());   // restores missing data
             }
             if (rootLayoutView.getListwiseDeletionFlag()) {
                 mainApp.getValue().setMessages(DataRecovery.listwiseDeletion(mainApp.getValue().getMessages()));
             }
 
-            LinkedHashMap<String, CheckBox> firedFlags = getFiredFlags(); //consists of names and related flags
-            dataController.write(firedFlags, mainApp.getValue().getMessages(), outputFile);   //method of actual output to the file
+            LinkedHashMap<String, CheckBox> firedFlags = getFiredFlags();   //consists of names and related flags
+            dataController.write(firedFlags, mainApp.getValue().getMessages(), outputFile); //method of actual output to the file
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information");
@@ -424,7 +424,7 @@ public class ParserView {
         }
     }
 
-    //getFiredFlags returns a hashMap from where every key represents a name of corresponding flag and every value reflects its state (fired or not)
+    // getFiredFlags returns a hashMap wherein every key represents a name of corresponding flag and every value reflects its state (fired or not)
     private LinkedHashMap<String, CheckBox> getFiredFlags() {
         LinkedHashMap<String, CheckBox> linkedHashMap = new LinkedHashMap<>();
         Boolean testFileSelected = (dataController.getTestFile() != null);

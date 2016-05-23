@@ -23,6 +23,7 @@ import model.eyetracker.Message;
 import model.test.Stimulus;
 import org.apache.commons.math3.util.Pair;
 import org.controlsfx.control.RangeSlider;
+import simplify.Simplify;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,15 +32,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * Created by Vano on 22.02.2016.
+ * @author Ivan, Dmitry
+ *         created on 22.02.2016.
  */
 public class ViewOfData {
+
+    private final int RANGE_SLIDER_MAJOR_TICK_NUMBER = 5;
+    private final int X_AXIS_SEGMENTS = 7;
 
     private final DateFormat sliderDateFormat = new SimpleDateFormat("H:mm");
     private final DateFormat labelDateFormat = new SimpleDateFormat("H:mm:ss.S");
     private final DateFormat axisDateFormat = new SimpleDateFormat("H:mm:ss.S");
+
     private ArrayList<ArrayList<Double>> distances;
     private Property<Main> mainApp;
+
     @FXML
     private Label lblCount;
     @FXML
@@ -70,6 +77,10 @@ public class ViewOfData {
     private Label highBoundLabel;
     @FXML
     private TextField widthOfSmoothingWindow;
+    @FXML
+    private TextField toleranceTextField;
+    @FXML
+    private Label numberOfPointsLabel;
 
     @FXML
     private void initialize() {
@@ -94,12 +105,10 @@ public class ViewOfData {
 //        distancesChart.setTitle("Distances between points and center of the stimulus");
 //        ArrayList<ArrayList<Double>> time = mainApp.getValue().getStimuli().get(0).getTimestampAsString();
         XYChart.Series<Integer, Double> series = new XYChart.Series<>();
-        if (indexOfStimulus == 0) {
-            indexOfStimulus = distances.size();
-        }
-        if (indexOfStimulus > distances.size()) {
-            return;
-        }
+
+        if (indexOfStimulus == 0) indexOfStimulus = distances.size();
+        if (indexOfStimulus > distances.size()) return;
+
         int count = 0;
         //TODO - Следует ограничить максимальное количество точек на графике. Использовать алгоритм Рамера-Дугласа-Пекера.
         for (int i = indexOfStimulus - 1; i < indexOfStimulus; i++) {  // В таком виде выводит только 1 стимул на график единовременно. (i = 0 чтобы выводить с начала) (indexOfStimulus - 1)
@@ -112,7 +121,7 @@ public class ViewOfData {
     }
 
     public void initTraceChart() {
-        // Убираем минуса с отрицательной части.
+        // Убираем минуса с отрицательной части вертикальной оси.
         yTraceAxis.setTickLabelFormatter(new StringConverter<Number>() {
             @Override
             public String toString(Number object) {
@@ -139,8 +148,10 @@ public class ViewOfData {
                     traceChart.getData().add(traceSeries);
                     traceChart.getData().add(stimuliSeries);
                 });
+
                 for (int i = 0; i < mappedData.size(); i++) {
                     final int finalI = i;
+
                     Platform.runLater(() -> {
                         stimuliSeries.getData().add(new LineChart.Data<>(
                                 mappedData.get(finalI).getStimulus().getPosition().x,
@@ -152,6 +163,7 @@ public class ViewOfData {
                             }
                         }
                     });
+
                     for (int j = 0; j < mappedData.get(i).getMessages().size(); j++) {
                         final int finalJ = j;
                         Platform.runLater(() -> traceSeries.getData().add(new LineChart.Data<>(
@@ -170,9 +182,10 @@ public class ViewOfData {
         // Setting of visual parameters.
         long minValue = mainApp.getValue().getMessages().get(0).values.frame.timestamp.getTime();
         long maxValue = mainApp.getValue().getMessages().get(mainApp.getValue().getMessages().size() - 1).values.frame.timestamp.getTime();
+
         coordinatesRangeSlider.setMin(minValue);
         coordinatesRangeSlider.setMax(maxValue);
-        coordinatesRangeSlider.setMajorTickUnit((maxValue - minValue) / 5);
+        coordinatesRangeSlider.setMajorTickUnit((maxValue - minValue) / RANGE_SLIDER_MAJOR_TICK_NUMBER);
         coordinatesRangeSlider.setHighValue(maxValue - (maxValue - minValue) / 4);
         coordinatesRangeSlider.setLowValue(minValue + (maxValue - minValue) / 4);
         coordinatesRangeSlider.setMinorTickCount(3);
@@ -187,6 +200,7 @@ public class ViewOfData {
                 return Double.valueOf(string).longValue();
             }
         });
+
         xCoordinatesAxis.upperBoundProperty().bind(coordinatesRangeSlider.highValueProperty());
         xCoordinatesAxis.lowerBoundProperty().bind(coordinatesRangeSlider.lowValueProperty());
         xCoordinatesAxis.setTickLabelFormatter(new StringConverter<Number>() {
@@ -202,12 +216,12 @@ public class ViewOfData {
         });
         // Creating series and adding them to the chart.
         List<Pair<Long, Double>> xPoints = preparePlottingData(mainApp.getValue().getMessages(), Field.AVG_X);
+        xPoints = Simplify.simplify(xPoints, Double.parseDouble(toleranceTextField.getText()), true);
 //        List<Pair<Long, Double>> yPoints = preparePlottingData(mainApp.getValue().getMessages(), Field.AVG_Y);
         List<Pair<Long, Double>> smoothedXPoints = DataRecovery.kernelRegression(xPoints, Double.parseDouble(widthOfSmoothingWindow.getText()));
-        addSeriesToChart(xPoints, "X", coordinatesChart);
+//        addSeriesToChart(xPoints, "X", coordinatesChart);
 //        addSeriesToChart(yPoints, coordinatesChart);
         addSeriesToChart(smoothedXPoints, "Smoothed X", coordinatesChart);
-
     }
 
     private void addSeriesToChart(List<Pair<Long, Double>> points, String seriesName, XYChart chart) {
@@ -272,12 +286,12 @@ public class ViewOfData {
         // Binding range slider's low value to the low bound label.
         coordinatesRangeSlider.lowValueProperty().addListener((observable, oldValue, newValue) -> {
             lowBoundLabel.setText(labelDateFormat.format(newValue.longValue()));
-            xCoordinatesAxis.setTickUnit((coordinatesRangeSlider.getHighValue() - coordinatesRangeSlider.getLowValue()) / 7);  // Denominator is the number of x-axis segments.
+            xCoordinatesAxis.setTickUnit((coordinatesRangeSlider.getHighValue() - coordinatesRangeSlider.getLowValue()) / X_AXIS_SEGMENTS);
         });
         // Binding range slider's high value to the high bound label.
         coordinatesRangeSlider.highValueProperty().addListener((observable, oldValue, newValue) -> {
             highBoundLabel.setText(labelDateFormat.format(newValue.longValue()));
-            xCoordinatesAxis.setTickUnit((coordinatesRangeSlider.getHighValue() - coordinatesRangeSlider.getLowValue()) / 7);  // Denominator is the number of x-axis segments.
+            xCoordinatesAxis.setTickUnit((coordinatesRangeSlider.getHighValue() - coordinatesRangeSlider.getLowValue()) / X_AXIS_SEGMENTS);
         });
     }
 
@@ -292,8 +306,11 @@ public class ViewOfData {
         if (event.getCode().equals(KeyCode.ENTER)) {
             event.consume();
             List<Pair<Long, Double>> xPoints = preparePlottingData(mainApp.getValue().getMessages(), Field.AVG_X);
+            xPoints = Simplify.simplify(xPoints, Double.parseDouble(toleranceTextField.getText()), true);
             xPoints = DataRecovery.kernelRegression(xPoints, Double.parseDouble(widthOfSmoothingWindow.getText()));
+
             addSeriesToChart(xPoints, "Smoothed X", coordinatesChart);
+            numberOfPointsLabel.setText(String.valueOf(xPoints.size()));
         }
     }
 
