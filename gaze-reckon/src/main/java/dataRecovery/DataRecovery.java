@@ -1,5 +1,6 @@
 package dataRecovery;
 
+import model.MissingValues;
 import model.eyetracker.Frame;
 import model.eyetracker.Message;
 import org.apache.commons.math3.util.Pair;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 public final class DataRecovery {
     private static final int FRAME_RATE = 30;
+    private static final double WIDTH_OF_SMOOTHING_WINDOW = 100.0;
 
     // Method of checking time field in the array of tracker messages and do all values unique.
     public static int correctRepetitive(ArrayList<Message> messages) {
@@ -59,12 +61,14 @@ public final class DataRecovery {
             } while (kindOfMiss != null && i < messages.size());
             allMissingSeries.add(series);
         }
+        allMissingSeries.remove(allMissingSeries.size() - 1);   // // Сrutch removes the last item which always is empty.
         return allMissingSeries;
     }
 
     // Here are bunch of data recovery approaches. they should be coded separately.
+    // Annotate: Method modifies "messages" list.
     private static void interpolate(ArrayList<Message> messages, MissingValues series, int frameRate) {
-        if (series.size() < (1000 / frameRate * 3) && series.size() > 0) {
+        if (series.size() < (1000 / (frameRate * 3)) && series.size() > 0) {
             if (series.get(0).getKey() != 0 && series.get(series.size() - 1).getKey() != 0) {
                 Message first = messages.get(series.get(0).getKey() - 1);
                 Message last = messages.get(series.get(series.size() - 1).getKey() + 1);
@@ -164,17 +168,27 @@ public final class DataRecovery {
         }
     }
 
-    public static void regression(ArrayList<Message> messages, int frameRate) {
+    public static void regression(ArrayList<Message> messages, ArrayList<MissingValues> misses, int frameRate) {
         List<Pair<Long, Double>> xSeries = ViewOfData.preparePlottingData(messages, ViewOfData.Field.AVG_X);
         List<Pair<Long, Double>> ySeries = ViewOfData.preparePlottingData(messages, ViewOfData.Field.AVG_Y);
-        for (int i = 0; i < xSeries.size(); i++) {
 
-        }
-        xSeries = Regression.nadarayaWatson(xSeries, 100, true);
-        ySeries = Regression.nadarayaWatson(ySeries, 100, true);
-        for (int i = 0; i < messages.size(); i++) {
-            messages.get(i).values.frame.avg.x = xSeries.get(i).getValue();
-            messages.get(i).values.frame.avg.y = ySeries.get(i).getValue();
+        int first, last;
+        List<Pair<Long, Double>> xRecoveredPart, yRecoveredPart;
+
+        for (MissingValues missingSeries : misses) {
+            if (missingSeries.size() < 1000 / (frameRate * 7)) {
+
+                first = missingSeries.get(0).getKey();
+                last = missingSeries.size() - 1;
+
+                xRecoveredPart = Regression.nadarayaWatson(xSeries, WIDTH_OF_SMOOTHING_WINDOW, first, last);
+                yRecoveredPart = Regression.nadarayaWatson(ySeries, WIDTH_OF_SMOOTHING_WINDOW, first, last);
+
+                for (int i = 0; i < xRecoveredPart.size(); i++) {
+                    messages.get(first + i).values.frame.avg.x = xRecoveredPart.get(i).getValue();
+                    messages.get(first + i).values.frame.avg.y = yRecoveredPart.get(i).getValue();
+                }
+            }
         }
     }
 
@@ -187,29 +201,10 @@ public final class DataRecovery {
         for (MissingValues series : missingValues) {
             interpolate(messages, series, frameRate);
         }
-        regression(messages, frameRate);
+        missingValues = findMisses(messages);
+        regression(messages, missingValues, frameRate);
     }
 
 
-    // wrapper class
-    private static class MissingValues {
-        static ArrayList<Pair<Integer, String>> series;
 
-        MissingValues() {
-            series = new ArrayList<>();
-        }
-
-        // Pair<Integer, String>: Integer - number of trackers message, String - kind of miss
-        boolean add(Pair<Integer, String> item) {
-            return series.add(item);
-        }
-
-        Pair<Integer, String> get(int i) {
-            return series.get(i);
-        }
-
-        int size() {
-            return series.size();
-        }
-    }
 }
